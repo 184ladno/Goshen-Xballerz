@@ -1,0 +1,33 @@
+.body{
+    background-color:black;
+    color: goldenrod;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.header{
+    background-color: black;
+    border: 2px solid goldenrod;
+    width: 100%;
+    height: 100px;
+    color: goldenrod;
+}
+.header h1{
+    
+    font-size: 1.5em;
+    margin: 0;
+    padding: 20px 0;
+}
+.header ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+.header ul li{
+    margin: 0 10px;
+}
+.header ul li a{
+    color: goldenrod;
+    text-decoration: none;
