@@ -8,15 +8,23 @@
 .header{
     background-color: black;
     border: 2px solid goldenrod;
+    box-sizing: border-box;
     width: 100%;
-    height: 100px;
+    min-height: 100px;
+    padding: 10px 20px;
     color: goldenrod;
+    display: flex;
+    align-items: center;
+    gap: 18px;
 }
 .header h1{
-    
+    flex-shrink: 0;
     font-size: 1.5em;
     margin: 0;
-    padding: 20px 0;
+    white-space: nowrap;
+}
+.header nav{
+    flex: 1 1 auto;
 }
 .header ul{
     list-style-type: none;
@@ -24,11 +32,108 @@
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 .header ul li{
-    margin: 0 10px;
+    margin: 0 8px;
+    font-size: 0.8em;
+    padding: 10px 0;
 }
 .header ul li a{
+    display: inline-block;
+    position: relative;
     color: goldenrod;
     text-decoration: none;
+}
+.header ul li a::after{
+    position: absolute;
+    right: -6px;
+    bottom: -7px;
+    left: -6px;
+    height: 2px;
+    background-color: currentColor;
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 160ms ease;
+}
+.header ul li a:hover::after,
+.header ul li a:focus-visible::after{
+    transform: scaleX(1);
+}
+.header .logo{
+    height: 64px;
+    width: auto;
+    flex-shrink: 0;
+}
+.header-actions{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+.header-button{
+    border: 1px solid goldenrod;
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: goldenrod;
+    font-size: 0.8em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: ease 0.5s;
+}
+.header-button-primary{
+    background-color: goldenrod;
+    color: black;
+}
+.header-button:hover,
+.header-button:focus-visible{
+    background-color: #f0c44e;
+    color: black;
+    transform: scale(1.05);
+}
+
+@media (max-width: 1000px){
+    .header{
+        flex-wrap: wrap;
+    }
+
+    .header nav{
+        order: 1;
+        flex-basis: 100%;
+    }
+
+    .header nav ul{
+        justify-content: flex-start;
+    }
+
+    .header-actions{
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 560px){
+    .header{
+        padding: 10px 14px;
+        gap: 12px;
+    }
+
+    .header .logo{
+        height: 48px;
+    }
+
+    .header h1{
+        font-size: 1.15em;
+    }
+
+    .header-actions{
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .header-button{
+        flex: 1;
+        text-align: center;
+    }
 }
