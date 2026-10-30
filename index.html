@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goshen XBallerz</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header class="header">
+        <button class="home-btn" type="button" aria-label="Go to home page" onclick="window.location.href='index.html'">
         <img src="images/photo_2026-10-29_21.58.32-removebg-preview.png" alt="Goshen XBallerz logo" class="logo">
+        </button>
         <h1 class="site-title">GOSHEN XBALLERS</h1>
         <nav aria-label="Main navigation">
             <ul>
@@ -31,12 +34,22 @@
             </a>
         </div>
     </header>
-    <div class="navbar">
+    <main class="navbar">
         <div class="title">
             <h1>Football is won</h1>
             <p>in the mind</p>
         </div>
-        
-    </div>
+        <button class="hero-player" type="button" aria-label="Learn about the Goshen XBallerz player" aria-haspopup="dialog" aria-controls="player-dialog">
+            <img src="images/boy.png" alt="">
+        </button>
+    </main>
+    <dialog class="player-dialog" id="player-dialog" aria-labelledby="player-dialog-title">
+        <div class="player-dialog-content">
+            <button class="player-dialog-close" type="button" aria-label="Close player information">&times;</button>
+            <p class="player-dialog-label">GOSHEN XBALLERZ</p>
+            <h2 id="player-dialog-title">Meet the player</h2>
+            <p>Quick on his feet and locked in on the ball, he represents the focus and determination every player brings to the game.</p>
+        </div>
+    </dialog>
 </body>
 </html>
