@@ -66,6 +66,18 @@ body{
     transform: scaleX(1);
     color: rgb(229, 203, 135);
 }
+.description{
+    color: rgb(229, 203, 135);
+    width: 100%;
+    max-width: 52%;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+.description p{
+    margin: 0;
+}
 .home-btn{
     height: 80px;
     width: auto;
@@ -152,7 +164,9 @@ body{
     min-height: clamp(300px, 76vh, 500px);
     padding: clamp(40px, 8vw, 120px);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
     overflow: visible;
     background-color: #1e1c1c;
     background-image: url("images/Gemini_Generated_Image_697l0i697l0i697l.jpeg");
@@ -346,6 +360,10 @@ body{
     }
 
     .title{
+        max-width: 100%;
+    }
+
+    .description{
         max-width: 100%;
     }
 
