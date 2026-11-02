@@ -37,6 +37,7 @@ function initFeatureShowcase(section) {
 
 		const summary = article.querySelector(".feature-summary");
 		if (summary) panel.append(...[...summary.children].map((child) => child.cloneNode(true)));
+		panel.classList.toggle("has-image", Boolean(panel.querySelector(".feature-image")));
 
 		stage.append(panel);
 
@@ -67,32 +68,26 @@ function initFeatureShowcase(section) {
 
 	if (!("IntersectionObserver" in window)) return;
 
-	// The observer root is a band across the middle of the viewport. Articles
-	// entering or leaving that band are tracked, and the one closest to the
-	// viewport centre becomes active. This works in both scroll directions.
-	const inBand = new Set();
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) inBand.add(entry.target);
-			else inBand.delete(entry.target);
-		});
-		if (!inBand.size) return;
-
+	// Active step = the last article whose top edge has passed the viewport centre.
+	// Only four rect reads, and only when an observer reports a change.
+	function updateActive() {
 		const centre = window.innerHeight / 2;
-		let closest = null;
-		let closestDistance = Infinity;
-		inBand.forEach((article) => {
-			const { top, bottom } = article.getBoundingClientRect();
-			const distance = top <= centre && bottom >= centre ? 0 : Math.min(Math.abs(top - centre), Math.abs(bottom - centre));
-			if (distance < closestDistance) {
-				closestDistance = distance;
-				closest = article;
-			}
+		let current = articles[0];
+		articles.forEach((article) => {
+			if (article.getBoundingClientRect().top <= centre) current = article;
 		});
-		if (closest) setActive(closest.dataset.feature);
-	}, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
+		setActive(current.dataset.feature);
+	}
 
-	articles.forEach((article) => observer.observe(article));
+	// Triggers: articles crossing a band around the viewport centre (normal scrolling),
+	// plus the whole list entering/leaving the viewport (jumps, reloads mid-page).
+	// Fine-grained thresholds so the callback also fires while an edge moves through the band.
+	const bandThresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+	const bandObserver = new IntersectionObserver(updateActive, { rootMargin: "-40% 0px -40% 0px", threshold: bandThresholds });
+	articles.forEach((article) => bandObserver.observe(article));
+
+	const listObserver = new IntersectionObserver(updateActive, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+	listObserver.observe(section.querySelector(".feature-list"));
 }
 
 document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
