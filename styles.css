@@ -8,7 +8,7 @@ body{
 .header{
     position: relative;
     z-index: 4;
-    background-color: rgb(44, 44, 43);
+    background-color: rgb(36, 36, 34);
     border: 1.5px solid goldenrod;
     box-sizing: border-box;
     width: 100%;
@@ -72,11 +72,28 @@ body{
     max-width: 52%;
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
 }
 .description p{
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 60px 0;
+    transition: all 160ms ease;
+}
+.description p:hover{
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75), 0 0 8px rgba(218, 165, 32, 0.55);
+    scale: 1.05;
+}
+.description p img{
+    flex: 0 0 30px;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    object-position: center;
+    filter: brightness(0) saturate(100%) invert(67%) sepia(82%) saturate(600%) hue-rotate(358deg) brightness(95%) contrast(90%);
 }
 .home-btn{
     height: 80px;
@@ -187,11 +204,17 @@ body{
     font-size: clamp(2.5rem, 6vw, 5.5rem);
     line-height: 1.05;
 }
-.title p{
+.title h2{
     margin: 0;
     color:rgb(229, 203, 135);
     font-size: clamp(1.75rem, 4vw, 3.5rem);
     font-weight: 700;
+}
+.title p{
+    margin: 12px 0 0;
+    font-size: clamp(1.2rem, 2vw, 1rem);
+    line-height: 1.6;
+    color:antiquewhite;
 }
 .hero-player{
     position: absolute;
@@ -209,7 +232,7 @@ body{
     cursor: pointer;
     filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
     animation: player-enter 900ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
-    transition: filter 180ms ease, transform 180ms ease;
+    transition: all 180ms ease;
 }
 .hero-player img{
     display: block;
@@ -219,11 +242,13 @@ body{
     object-position: bottom;
     pointer-events: none;
     z-index: 3;
-
+    transition: all 180ms ease;
+}
+.hero-player:hover img{
+    transform: scale(1.010);
 }
 .hero-player:hover{
     filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 16px rgba(218, 165, 32, 0.55));
-    transform: translateY(-5px) scale(1.015);
 }
 .hero-player:focus-visible{
     outline: 3px solid goldenrod;
