@@ -16,73 +16,78 @@ playerDialog.addEventListener("click", (event) => {
 	}
 });
 
-const featureArticles = [...document.querySelectorAll(".feature-copy")];
-const featureDescriptions = [...document.querySelectorAll(".feature-description-panel")];
+/* ---------- Scroll-driven sticky feature section ----------
+   The right-hand .feature-copy articles are the single source of truth.
+   Each article's .feature-summary is cloned into the sticky left panel,
+   and an IntersectionObserver watching a thin line at the viewport centre
+   decides which article (and therefore which left panel) is active. */
+function initFeatureShowcase(section) {
+	const articles = [...section.querySelectorAll(".feature-copy[data-feature]")];
+	const stage = section.querySelector(".feature-description-stage");
+	const progress = section.querySelector(".feature-progress");
+	if (!articles.length || !stage) return;
 
-function setActiveFeature(featureName) {
-	featureArticles.forEach((article) => {
-		article.classList.toggle("is-active", article.dataset.feature === featureName);
+	const panels = articles.map((article, index) => {
+		const panel = document.createElement("article");
+		panel.className = "feature-description-panel";
+		panel.dataset.description = article.dataset.feature;
+
+		const label = article.querySelector(".feature-number");
+		if (label) panel.append(label.cloneNode(true));
+
+		const summary = article.querySelector(".feature-summary");
+		if (summary) panel.append(...[...summary.children].map((child) => child.cloneNode(true)));
+		panel.classList.toggle("has-image", Boolean(panel.querySelector(".feature-image")));
+
+		stage.append(panel);
+
+		if (progress) {
+			const dot = document.createElement("li");
+			dot.dataset.step = article.dataset.feature;
+			dot.textContent = String(index + 1).padStart(2, "0");
+			progress.append(dot);
+		}
+		return panel;
 	});
+	const dots = progress ? [...progress.children] : [];
 
-	featureDescriptions.forEach((description) => {
-		const isActive = description.dataset.description === featureName;
-		description.classList.toggle("is-active", isActive);
-		description.setAttribute("aria-hidden", String(!isActive));
-	});
-}
-
-if (featureArticles.length > 0) {
-	const featureHeadings = featureArticles
-		.map((article) => article.querySelector("h3"))
-		.filter(Boolean);
-
-	if ("IntersectionObserver" in window) {
-		const featureObserver = new window.IntersectionObserver((entries) => {
-			const activeHeading = entries
-				.filter((entry) => entry.isIntersecting)
-				.sort((first, second) => {
-					const viewportCenter = window.innerHeight / 2;
-					const firstDistance = Math.abs(first.boundingClientRect.top + first.boundingClientRect.height / 2 - viewportCenter);
-					const secondDistance = Math.abs(second.boundingClientRect.top + second.boundingClientRect.height / 2 - viewportCenter);
-
-					return firstDistance - secondDistance;
-				})[0]?.target;
-
-			if (activeHeading) {
-				const activeFeature = activeHeading.closest("[data-feature]");
-				if (activeFeature) setActiveFeature(activeFeature.dataset.feature);
-			}
-		}, {
-			rootMargin: "-45% 0px -45% 0px",
-			threshold: 0
+	let activeName = null;
+	function setActive(name) {
+		if (name === activeName) return;
+		activeName = name;
+		articles.forEach((el) => el.classList.toggle("is-active", el.dataset.feature === name));
+		panels.forEach((el) => {
+			const isActive = el.dataset.description === name;
+			el.classList.toggle("is-active", isActive);
+			el.setAttribute("aria-hidden", String(!isActive));
 		});
-
-		featureHeadings.forEach((heading) => featureObserver.observe(heading));
-	} else {
-		let scrollFrame = 0;
-		const updateActiveFeature = () => {
-			scrollFrame = 0;
-			const viewportCenter = window.innerHeight / 2;
-			const activeHeading = featureHeadings
-				.map((heading) => {
-					const bounds = heading.getBoundingClientRect();
-
-					return {
-						heading,
-						distance: Math.abs(bounds.top + bounds.height / 2 - viewportCenter)
-					};
-				})
-				.sort((first, second) => first.distance - second.distance)[0];
-			const activeFeature = activeHeading?.heading.closest("[data-feature]");
-
-			if (activeFeature) setActiveFeature(activeFeature.dataset.feature);
-		};
-		const scheduleUpdate = () => {
-			if (!scrollFrame) scrollFrame = requestAnimationFrame(updateActiveFeature);
-		};
-
-		window.addEventListener("scroll", scheduleUpdate, { passive: true });
-		window.addEventListener("resize", scheduleUpdate, { passive: true });
-		scheduleUpdate();
+		dots.forEach((el) => el.classList.toggle("is-active", el.dataset.step === name));
 	}
+
+	setActive(articles[0].dataset.feature);
+
+	if (!("IntersectionObserver" in window)) return;
+
+	// Active step = the last article whose top edge has passed the viewport centre.
+	// Only four rect reads, and only when an observer reports a change.
+	function updateActive() {
+		const centre = window.innerHeight / 2;
+		let current = articles[0];
+		articles.forEach((article) => {
+			if (article.getBoundingClientRect().top <= centre) current = article;
+		});
+		setActive(current.dataset.feature);
+	}
+
+	// Triggers: articles crossing a band around the viewport centre (normal scrolling),
+	// plus the whole list entering/leaving the viewport (jumps, reloads mid-page).
+	// Fine-grained thresholds so the callback also fires while an edge moves through the band.
+	const bandThresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+	const bandObserver = new IntersectionObserver(updateActive, { rootMargin: "-40% 0px -40% 0px", threshold: bandThresholds });
+	articles.forEach((article) => bandObserver.observe(article));
+
+	const listObserver = new IntersectionObserver(updateActive, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+	listObserver.observe(section.querySelector(".feature-list"));
 }
+
+document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
