@@ -340,6 +340,13 @@ body{
     width: min(1240px, calc(100% - 48px));
     margin: 72px auto 96px;
 }
+/* Full-width dark band; content stays within 1240px */
+.content.feature-showcase{
+    width: 100%;
+    margin: 0;
+    padding: 96px max(24px, calc((100% - 1240px) / 2));
+    background-color: #1e1c1c;
+}
 .feature-intro{
     max-width: 650px;
     margin: 0 auto 48px;
@@ -376,15 +383,29 @@ body{
 }
 .feature-visual-column{
     position: sticky;
-    top: clamp(16px, 4vh, 36px);
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
 }
 .feature-description-stage{
     position: relative;
-    min-height: min(68vh, 620px);
+    height: min(56vh, 420px);
+    box-sizing: border-box;
+    padding: clamp(28px, 4vw, 48px);
+    border: 1px solid rgba(218, 165, 32, 0.35);
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 12% 0%, rgba(218, 165, 32, 0.14), transparent 45%),
+        linear-gradient(145deg, #292720, #171716 72%);
+    overflow: hidden;
 }
 .feature-description-panel{
     position: absolute;
-    inset: 0;
+    inset: clamp(28px, 4vw, 48px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -399,12 +420,36 @@ body{
     visibility: visible;
     transform: translateY(0);
 }
+.feature-description-panel > .feature-number{
+    margin: 0 0 20px;
+}
 .feature-description-panel > p:not(.feature-number){
     max-width: 520px;
     margin: 0;
     color: antiquewhite;
     font-size: clamp(1.1rem, 1.8vw, 1.35rem);
     line-height: 1.65;
+}
+.feature-progress{
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.feature-progress li{
+    flex: 1;
+    padding-top: 10px;
+    border-top: 2px solid rgba(255, 255, 255, 0.14);
+    color: #7d786c;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    transition: color 280ms ease, border-color 280ms ease;
+}
+.feature-progress li.is-active{
+    border-top-color: goldenrod;
+    color: goldenrod;
 }
 .pathway-list{
     display: grid;
@@ -721,7 +766,7 @@ body{
     min-width: 0;
 }
 .feature-copy{
-    min-height: 68vh;
+    min-height: 80vh;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -749,15 +794,15 @@ body{
     font-size: clamp(1.75rem, 3vw, 2.65rem);
     line-height: 1.12;
 }
-.feature-copy > p:not(.feature-number){
+/* On desktop the summary text lives in the sticky left panel */
+.feature-summary{
     display: none;
+}
+.feature-summary > p{
     max-width: 520px;
     margin: 18px 0 0;
     font-size: 1rem;
     line-height: 1.75;
-}
-.feature-copy .pathway-list{
-    display: none;
 }
 .feature-mobile-visual{
     display: none;
@@ -908,6 +953,12 @@ body{
         margin: 48px auto 64px;
     }
 
+    .content.feature-showcase{
+        width: 100%;
+        margin: 0;
+        padding: 56px 16px 64px;
+    }
+
     .feature-intro{
         margin-bottom: 28px;
     }
@@ -935,15 +986,17 @@ body{
         font-size: clamp(1.6rem, 7vw, 2rem);
     }
 
-    .feature-copy > p:not(.feature-number){
+    .feature-summary{
         display: block;
+    }
+
+    .feature-summary > p{
         margin-top: 12px;
         font-size: 0.95rem;
         line-height: 1.6;
     }
 
     .feature-copy .pathway-list{
-        display: grid;
         margin-top: 16px;
     }
 
@@ -960,6 +1013,7 @@ body{
 @media (prefers-reduced-motion: reduce){
     .hero-player,
     .feature-description-panel,
+    .feature-progress li,
     .feature-copy,
     .content-item{
         animation: none;
