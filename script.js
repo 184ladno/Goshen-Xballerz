@@ -91,3 +91,22 @@ function initFeatureShowcase(section) {
 }
 
 document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
+
+/* ---------- Always start at the top on reload ----------
+   In-page links (e.g. "Read reviews") scroll smoothly without adding a #hash
+   to the address, and the browser is told not to restore the old scroll position. */
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+if (location.hash) {
+	history.replaceState(null, "", location.pathname + location.search);
+}
+window.addEventListener("load", () => window.scrollTo(0, 0));
+
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+	link.addEventListener("click", (event) => {
+		const target = document.getElementById(link.getAttribute("href").slice(1));
+		if (!target) return;
+		event.preventDefault();
+		target.scrollIntoView(); // smooth via CSS scroll-behavior (respects reduced motion)
+	});
+});
