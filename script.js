@@ -116,3 +116,105 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 		target.scrollIntoView(); // smooth via CSS scroll-behavior (respects reduced motion)
 	});
 });
+
+/* ---------- Popular questions widget (every page) ----------
+   A fixed avatar button in the bottom-right corner opens a pop-up with the
+   FAQ. Edit the questions here — they appear on every page that loads
+   script.js. Add or remove { question, answer } entries as needed. */
+const popularQuestions = [
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+];
+
+function initFaqWidget() {
+	const widget = document.createElement("div");
+	widget.className = "faq-widget";
+
+	const items = popularQuestions.map(({ question, answer }) => `
+		<details class="faq-item">
+			<summary>
+				<span class="faq-question">${question}</span>
+				<span class="faq-icon" aria-hidden="true"></span>
+			</summary>
+			<div class="faq-answer"><p>${answer}</p></div>
+		</details>`).join("");
+
+	widget.innerHTML = `
+		<div class="faq-popup" id="faq-popup" role="dialog" aria-labelledby="faq-popup-title" hidden>
+			<div class="faq-popup-header">
+				<p class="faq-popup-label">FAQ</p>
+				<h2 id="faq-popup-title">Popular questions</h2>
+				<button type="button" class="faq-popup-close" aria-label="Close popular questions">&times;</button>
+			</div>
+			<div class="faq-popup-body">
+				<div class="faq-list">${items}</div>
+			</div>
+			<a class="faq-popup-contact" href="contact.html">Need more information? <span>Contact us</span></a>
+		</div>
+		<p class="faq-widget-hint" aria-hidden="true">Have a question?</p>
+		<button type="button" class="faq-widget-button" aria-label="Popular questions" aria-expanded="false" aria-controls="faq-popup"></button>`;
+
+	document.body.append(widget);
+
+	const button = widget.querySelector(".faq-widget-button");
+	const popup = widget.querySelector(".faq-popup");
+	const close = widget.querySelector(".faq-popup-close");
+
+	function setOpen(open) {
+		popup.hidden = !open;
+		button.setAttribute("aria-expanded", String(open));
+		widget.classList.toggle("is-open", open);
+		if (open) close.focus();
+	}
+
+	/* "Have a question?" hint: first appears 5 seconds after the page loads,
+	   then pops up now and then until the visitor clicks the button. */
+	const hint = widget.querySelector(".faq-widget-hint");
+	const HINT_FIRST_DELAY = 5000; // first appearance after page load
+	const HINT_VISIBLE_FOR = 5000; // how long it stays on screen
+	const HINT_REPEAT_EVERY = 20000; // time between appearances
+	let hintDismissed = false;
+	let hintInterval;
+	const hintTimers = [];
+
+	function showHint() {
+		if (hintDismissed || !popup.hidden) return;
+		hint.classList.add("is-visible");
+		hintTimers.push(setTimeout(() => hint.classList.remove("is-visible"), HINT_VISIBLE_FOR));
+	}
+
+	function dismissHint() {
+		hintDismissed = true;
+		hintTimers.forEach(clearTimeout);
+		clearInterval(hintInterval);
+		hint.classList.remove("is-visible");
+	}
+
+	hintTimers.push(setTimeout(() => {
+		showHint();
+		hintInterval = setInterval(showHint, HINT_REPEAT_EVERY);
+	}, HINT_FIRST_DELAY));
+
+	button.addEventListener("click", () => {
+		dismissHint();
+		setOpen(popup.hidden);
+	});
+	close.addEventListener("click", () => {
+		setOpen(false);
+		button.focus();
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && !popup.hidden) {
+			setOpen(false);
+			button.focus();
+		}
+	});
+	document.addEventListener("click", (event) => {
+		if (!popup.hidden && !widget.contains(event.target)) setOpen(false);
+	});
+}
+
+initFaqWidget();

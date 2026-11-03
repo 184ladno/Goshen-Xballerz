@@ -1,5 +1,5 @@
 body{
-    background-color:antiquewhite;
+    background-color:black;
     color: goldenrod;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -368,7 +368,6 @@ body{
     margin: 0;
     z-index: 2;
     padding: 96px max(24px, calc((100% - 1240px) / 2));
-    background-color: #1e1c1c;
 }
 .feature-intro{
     max-width: 650px;
@@ -1093,10 +1092,38 @@ body{
 }
 
 /* ---------- Meet Gareth ---------- */
+/* ---------- Page container below the hero ----------
+   Wraps the coach intro, features and reviews in one gold-edged panel with
+   decorative gold lines behind the content (like the hero artwork).
+   overflow: clip (not hidden) so the sticky feature panel keeps working. */
+.page-wrap{
+    position: relative;
+    margin: 0 12px 12px;
+    border: 1px solid rgba(218, 165, 32, 0.55);
+    border-radius: 10px;
+    background-color: #1e1c1c;
+    overflow: clip;
+}
+.page-lines{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+.page-lines path{
+    vector-effect: non-scaling-stroke;
+}
+@media (max-width: 700px){
+    .page-wrap{
+        margin: 0 6px 6px;
+    }
+}
+
 .coach-intro{
     position: relative;
     z-index: 2;
-    background-color: #1e1c1c;
     /* Extra top space leaves room for the player's boots overlapping from the hero */
     padding: 170px 0 96px;
 }
@@ -1234,7 +1261,6 @@ body{
 .reviews{
     position: relative;
     z-index: 2;
-    background-color: #1e1c1c;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: 96px 0;
     scroll-margin-top: 16px;
@@ -1358,50 +1384,187 @@ body{
     }
 }
 
-/* ---------- Popular questions (FAQ) ---------- */
-.faq{
-    position: relative;
-    z-index: 2;
-    background-color: #1e1c1c;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 96px 0;
+/* ---------- Popular questions widget (every page) ----------
+   Fixed to the viewport, so it never moves or pushes page content. */
+.faq-widget{
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    font-family: Arial, Helvetica, sans-serif;
 }
-.faq-inner{
+.faq-widget-button{
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    border: 2px solid goldenrod;
+    border-radius: 50%;
+    background: #171615 url("images/Confident Spiky-Haired Anime Avatar-Photoroom.png") center / cover no-repeat;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 0 4px rgba(218, 165, 32, 0.18);
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.faq-widget-button:hover,
+.faq-widget.is-open .faq-widget-button{
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5), 0 0 22px rgba(218, 165, 32, 0.55);
+}
+/* "Have a question?" speech bubble beside the avatar */
+.faq-widget-hint{
+    position: absolute;
+    right: 88px;
+    bottom: 20px;
+    margin: 0;
+    padding: 10px 16px;
+    border: 1px solid goldenrod;
+    border-radius: 18px 18px 4px 18px;
+    background: #242323;
+    color: antiquewhite;
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(10px) scale(0.92);
+    transform-origin: bottom right;
+    transition: opacity 260ms ease, transform 260ms ease;
+}
+.faq-widget-hint.is-visible{
+    opacity: 1;
+    transform: none;
+}
+.faq-widget.is-open .faq-widget-hint{
+    display: none;
+}
+.faq-widget-button:focus-visible{
+    outline: 3px solid antiquewhite;
+    outline-offset: 4px;
+}
+.faq-popup{
     box-sizing: border-box;
-    width: min(1240px, calc(100% - 48px));
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(40px, 8vw, 112px);
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    width: min(400px, calc(100vw - 32px));
+    max-height: min(560px, calc(100vh - 140px));
+    border: 1px solid goldenrod;
+    border-top: 4px solid goldenrod;
+    border-radius: 12px;
+    background: #242323;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    transform-origin: bottom right;
+    animation: faq-popup-in 200ms ease;
 }
-.faq-intro h2{
+.faq-popup[hidden]{
+    display: none;
+}
+.faq-popup-header{
+    position: relative;
+    padding: 22px 64px 14px 24px;
+}
+.faq-popup-label{
+    margin: 0 0 6px;
+    color: goldenrod;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+.faq-popup-header h2{
     margin: 0;
     color: antiquewhite;
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    line-height: 1.1;
+    font-size: 1.4rem;
+    line-height: 1.2;
 }
-.faq-intro > p:last-child{
-    max-width: 420px;
-    margin: 18px 0 0;
+.faq-popup-close{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(218, 165, 32, 0.65);
+    border-radius: 50%;
+    color: goldenrod;
+    background: rgba(218, 165, 32, 0.1);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+.faq-popup-close:hover,
+.faq-popup-close:focus-visible{
+    color: #171615;
+    background: goldenrod;
+    transform: rotate(90deg);
+}
+.faq-popup-close:focus-visible{
+    outline: 2px solid antiquewhite;
+    outline-offset: 3px;
+}
+.faq-popup-body{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 24px;
+}
+.faq-popup-contact{
+    display: block;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(218, 165, 32, 0.3);
     color: #c9c4b8;
-    font-size: 1.05rem;
-    line-height: 1.7;
+    font-size: 0.95rem;
+    text-decoration: none;
 }
+.faq-popup-contact span{
+    color: goldenrod;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.faq-popup-contact:hover span,
+.faq-popup-contact:focus-visible span{
+    color: rgb(248, 217, 140);
+}
+.faq-popup-contact:focus-visible{
+    outline: 2px solid goldenrod;
+    outline-offset: -4px;
+}
+@keyframes faq-popup-in{
+    from{
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+    }
+    to{
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* FAQ accordion items (used inside the pop-up) */
 .faq-list{
     border-top: 1px solid rgba(218, 165, 32, 0.3);
 }
 .faq-item{
     border-bottom: 1px solid rgba(218, 165, 32, 0.3);
 }
+.faq-item:last-child{
+    border-bottom: 0;
+}
 .faq-item summary{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    padding: 22px 0;
+    gap: 16px;
+    padding: 16px 0;
     color: antiquewhite;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1.4;
     cursor: pointer;
@@ -1422,9 +1585,9 @@ body{
 /* Plus sign that turns into a minus when open */
 .faq-icon{
     position: relative;
-    flex: 0 0 32px;
-    width: 32px;
-    height: 32px;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
     box-sizing: border-box;
     border: 1px solid rgba(218, 165, 32, 0.6);
     border-radius: 50%;
@@ -1436,9 +1599,9 @@ body{
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 12px;
+    width: 10px;
     height: 2px;
-    margin: -1px 0 0 -6px;
+    margin: -1px 0 0 -5px;
     background: goldenrod;
     transition: transform 240ms ease, background-color 160ms ease;
 }
@@ -1457,17 +1620,14 @@ body{
     transform: rotate(0deg);
 }
 .faq-answer{
-    padding: 0 52px 24px 0;
+    padding: 0 0 18px;
     color: #c9c4b8;
-    font-size: 1rem;
-    line-height: 1.75;
+    font-size: 0.95rem;
+    line-height: 1.7;
     animation: faq-reveal 260ms ease;
 }
 .faq-answer p{
     margin: 0;
-}
-.faq-answer p + p{
-    margin-top: 12px;
 }
 @keyframes faq-reveal{
     from{
@@ -1481,28 +1641,27 @@ body{
 }
 
 @media (max-width: 700px){
-    .faq{
-        padding: 56px 0 64px;
+    .faq-widget{
+        right: 16px;
+        bottom: 16px;
     }
 
-    .faq-inner{
-        width: calc(100% - 32px);
-        grid-template-columns: 1fr;
-        gap: 28px;
+    .faq-widget-button{
+        width: 60px;
+        height: 60px;
     }
 
-    .faq-item summary{
-        padding: 18px 0;
-        font-size: 1rem;
-    }
-
-    .faq-answer{
-        padding-right: 0;
-        font-size: 0.95rem;
+    .faq-widget-hint{
+        right: 72px;
+        bottom: 14px;
+        font-size: 0.85rem;
     }
 }
 
 @media (prefers-reduced-motion: reduce){
+    .faq-widget-button,
+    .faq-widget-hint,
+    .faq-popup,
     .faq-icon,
     .faq-icon::before,
     .faq-icon::after,
