@@ -1098,7 +1098,7 @@ body{
    overflow: clip (not hidden) so the sticky feature panel keeps working. */
 .page-wrap{
     position: relative;
-    margin: 0 12px 12px;
+    margin: 12px;
     border: 1px solid rgba(218, 165, 32, 0.55);
     border-radius: 10px;
     background-color: #1e1c1c;
@@ -1117,7 +1117,7 @@ body{
 }
 @media (max-width: 700px){
     .page-wrap{
-        margin: 0 6px 6px;
+        margin: 6px;
     }
 }
 
