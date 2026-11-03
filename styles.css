@@ -367,8 +367,7 @@ body{
     width: 100%;
     margin: 0;
     z-index: 2;
-    /* Extra top space leaves room for the player's boots overlapping from the hero */
-    padding: 170px max(24px, calc((100% - 1240px) / 2)) 96px;
+    padding: 96px max(24px, calc((100% - 1240px) / 2));
     background-color: #1e1c1c;
 }
 .feature-intro{
@@ -1091,6 +1090,272 @@ body{
         font-size: 0.82rem;
     }
 
+}
+
+/* ---------- Meet Gareth ---------- */
+.coach-intro{
+    position: relative;
+    z-index: 2;
+    background-color: #1e1c1c;
+    /* Extra top space leaves room for the player's boots overlapping from the hero */
+    padding: 170px 0 96px;
+}
+.coach-inner{
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(40px, 8vw, 112px);
+    align-items: center;
+}
+.coach-media{
+    width: 100%;
+    max-width: 480px;
+}
+.coach-photo{
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid rgba(218, 165, 32, 0.35);
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 12% 0%, rgba(218, 165, 32, 0.14), transparent 45%),
+        linear-gradient(145deg, #292720, #171716 72%);
+}
+.coach-photo img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.coach-photo-placeholder{
+    height: 100%;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 14px;
+    color: rgba(218, 165, 32, 0.55);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+.coach-photo-placeholder svg{
+    width: 96px;
+    height: 96px;
+    fill: currentColor;
+}
+.coach-copy h2{
+    margin: 0;
+    color: antiquewhite;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.1;
+}
+.coach-lead{
+    max-width: 520px;
+    margin: 18px 0 0;
+    color: #c9c4b8;
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+.coach-details{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 32px;
+}
+.coach-detail h3{
+    margin: 0 0 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.35);
+    color: rgb(248, 217, 140);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+}
+.coach-detail ul{
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.coach-detail li{
+    position: relative;
+    padding-left: 16px;
+    color: #c9c4b8;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+.coach-detail li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+.coach-motto{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 22px 0 0;
+    color: rgb(248, 217, 140);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+.coach-motto-dot{
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+.coach-actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+}
+.coach-button-arrow{
+    border-color: black;
+}
+.coach-button-arrow img{
+    filter: brightness(0);
+}
+
+/* ---------- Reviews ---------- */
+.reviews{
+    position: relative;
+    z-index: 2;
+    background-color: #1e1c1c;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 96px 0;
+    scroll-margin-top: 16px;
+}
+.reviews-inner{
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+    text-align: center;
+}
+.reviews-inner h2{
+    margin: 0;
+    color: antiquewhite;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.1;
+}
+.reviews-list{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin: 48px 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+}
+.review-card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #292720, #171716 72%);
+}
+.review-card blockquote{
+    margin: 0;
+}
+.review-card blockquote p{
+    margin: 0;
+    color: antiquewhite;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+.review-card blockquote p::before{
+    content: "\201C";
+    display: block;
+    color: goldenrod;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 3.5rem;
+    line-height: 0.6;
+    margin-bottom: 4px;
+}
+.review-author{
+    margin: 0;
+    color: goldenrod;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+@media (prefers-reduced-motion: no-preference){
+    html{
+        scroll-behavior: smooth;
+    }
+}
+
+@media (max-width: 900px){
+    .reviews-list{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px){
+    .coach-intro{
+        padding: 48px 0 56px;
+    }
+
+    .coach-inner{
+        width: calc(100% - 32px);
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .coach-media{
+        max-width: none;
+    }
+
+    .coach-photo{
+        aspect-ratio: 4 / 3;
+    }
+
+    .coach-motto{
+        gap: 12px;
+        margin-top: 16px;
+        font-size: 0.85rem;
+        letter-spacing: 0.16em;
+    }
+
+    .coach-details{
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .coach-button{
+        flex: 1 1 100%;
+        box-sizing: border-box;
+        justify-content: center;
+    }
+
+    .reviews{
+        padding: 56px 0 64px;
+    }
+
+    .reviews-inner{
+        width: calc(100% - 32px);
+    }
+
+    .reviews-list{
+        margin-top: 32px;
+    }
 }
 
 /* ---------- Footer ---------- */
