@@ -1,20 +1,24 @@
+/* ---------- Player pop-up (home page only) ---------- */
 const playerTrigger = document.querySelector(".hero-player");
 const playerDialog = document.querySelector("#player-dialog");
-const playerDialogClose = playerDialog.querySelector(".player-dialog-close");
 
-playerTrigger.addEventListener("click", () => {
-	playerDialog.showModal();
-});
+if (playerTrigger && playerDialog) {
+	const playerDialogClose = playerDialog.querySelector(".player-dialog-close");
 
-playerDialogClose.addEventListener("click", () => {
-	playerDialog.close();
-});
+	playerTrigger.addEventListener("click", () => {
+		playerDialog.showModal();
+	});
 
-playerDialog.addEventListener("click", (event) => {
-	if (event.target === playerDialog) {
+	playerDialogClose.addEventListener("click", () => {
 		playerDialog.close();
-	}
-});
+	});
+
+	playerDialog.addEventListener("click", (event) => {
+		if (event.target === playerDialog) {
+			playerDialog.close();
+		}
+	});
+}
 
 /* ---------- Scroll-driven sticky feature section ----------
    The right-hand .feature-copy articles are the single source of truth.
@@ -94,13 +98,15 @@ document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
 
 /* ---------- Always start at the top on reload ----------
    In-page links (e.g. "Read reviews") scroll smoothly without adding a #hash
-   to the address, and the browser is told not to restore the old scroll position. */
+   to the address. On a reload the page starts at the top; a link from another
+   page to a section (e.g. index.html#features-title) still jumps to it. */
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
-if (location.hash) {
-	history.replaceState(null, "", location.pathname + location.search);
+const navigationEntry = performance.getEntriesByType("navigation")[0];
+if (navigationEntry && navigationEntry.type === "reload") {
+	if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+	window.addEventListener("load", () => window.scrollTo(0, 0));
 }
-window.addEventListener("load", () => window.scrollTo(0, 0));
 
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
 	link.addEventListener("click", (event) => {
