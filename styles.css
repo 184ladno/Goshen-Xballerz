@@ -2043,3 +2043,368 @@ body{
         transition: none;
     }
 }
+/* ---------- Current page in the main menu ---------- */
+.header ul li a[aria-current="page"]{
+    color: rgb(229, 203, 135);
+}
+.header ul li a[aria-current="page"]::after{
+    transform: scaleX(1);
+}
+
+/* ---------- Contact page ---------- */
+.contact-body{
+    background-color: #1e1c1c;
+}
+.contact-page{
+    color: #2a2722;
+}
+
+/* Hero: gold artwork, big two-tone headline left, player right */
+.contact-hero{
+    position: relative;
+    overflow: hidden;
+    background-color: #1e1c1c;
+    background-image:
+        linear-gradient(90deg, rgba(20, 19, 18, 0.92) 0%, rgba(20, 19, 18, 0.55) 55%, rgba(20, 19, 18, 0.15) 100%),
+        url("images/Gemini_Generated_Image_697l0i697l0i697l.jpeg");
+    background-position: center, right center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.45);
+}
+.contact-hero-inner{
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 48px));
+    position: relative;
+    min-height: clamp(220px, 22vw, 300px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: center;
+    gap: 24px;
+}
+.contact-hero-copy{
+    position: relative;
+    z-index: 1;
+    padding: clamp(28px, 4vw, 48px) 0;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+}
+.contact-hero h2{
+    margin: 0;
+    color: antiquewhite;
+    font-size: clamp(2.25rem, 5.5vw, 4.5rem);
+    font-weight: 900;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+}
+.contact-hero h2 span{
+    display: block;
+    color: rgb(229, 203, 135);
+}
+.contact-hero-tagline{
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin: 22px 0 0;
+    color: antiquewhite;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+}
+.contact-hero-tagline::before{
+    content: "";
+    flex: 0 0 56px;
+    height: 2px;
+    background: goldenrod;
+}
+.contact-hero-player{
+    /* Taller than the hero on purpose: the hero clips him, so the cream
+       contact section appears to sit in front and only his upper body shows */
+    position: absolute;
+    top: 8px;
+    right: clamp(0px, 10vw, 170px);
+    height: 210%;
+    width: auto;
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
+}
+
+/* Cream section: form left, bookings card right */
+.contact-section{
+    overflow: hidden;
+    overflow: clip;
+    background: #f6f1e6;
+    padding: clamp(40px, 5vw, 64px) 0;
+}
+.contact-inner{
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 4vw, 56px);
+    align-items: stretch;
+}
+.contact-form-column{
+    padding-right: clamp(0px, 4vw, 56px);
+    border-right: 1px solid rgba(184, 141, 42, 0.5);
+}
+.contact-eyebrow{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #a57a1c;
+}
+.contact-eyebrow::after{
+    content: "";
+    width: 40px;
+    height: 1px;
+    background: currentColor;
+}
+.contact-section h2{
+    margin: 0;
+    color: #111;
+    font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+}
+.contact-lead{
+    max-width: 560px;
+    margin: 12px 0 0;
+    color: #3a362f;
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+/* Form */
+.contact-form{
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+    scroll-margin-top: 24px;
+}
+.form-field{
+    display: grid;
+    gap: 6px;
+}
+.form-field label{
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.form-field input,
+.form-field select,
+.form-field textarea{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #cfc6b3;
+    border-radius: 6px;
+    background: #fbf8f1;
+    color: #111;
+    font: inherit;
+    font-size: 0.95rem;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.form-field textarea{
+    min-height: 96px;
+    resize: vertical;
+}
+.form-field select{
+    appearance: none;
+    padding-right: 40px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #3a362f 50%),
+        linear-gradient(135deg, #3a362f 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+}
+.form-field select:invalid{
+    color: #8a8478;
+}
+.form-field ::placeholder{
+    color: #8a8478;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus{
+    outline: none;
+    border-color: #b8902f;
+    box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.25);
+}
+.form-field [aria-invalid="true"]{
+    border-color: #b3261e;
+}
+.form-status{
+    margin: 0;
+    min-height: 1.2em;
+    color: #b3261e;
+    font-size: 0.9rem;
+}
+.form-status:empty{
+    display: none;
+}
+.form-status.is-success{
+    color: #3d6b1f;
+}
+
+/* Gold buttons */
+.contact-submit{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: 6px;
+    background: #c4a04a;
+    color: #111;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 160ms ease, transform 160ms ease;
+}
+.contact-submit:hover,
+.contact-submit:focus-visible{
+    background: #f0c44e;
+    transform: translateY(-1px);
+}
+.contact-submit:focus-visible{
+    outline: 2px solid #111;
+    outline-offset: 3px;
+}
+.contact-chevron{
+    width: 7px;
+    height: 7px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotate(45deg);
+}
+
+/* Existing bookings card */
+.booking-card{
+    position: relative;
+    display: grid;
+    padding: 28px 42% 28px 28px;
+    border: 1px solid rgba(184, 141, 42, 0.55);
+    border-radius: 6px;
+    background:
+        linear-gradient(115deg, transparent 62%, rgba(218, 165, 32, 0.18) 62%, rgba(218, 165, 32, 0.18) 64%, transparent 64%),
+        linear-gradient(120deg, transparent 72%, rgba(218, 165, 32, 0.25) 72%, rgba(218, 165, 32, 0.25) 76%, transparent 76%),
+        #faf6ec;
+}
+.booking-copy{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+}
+.booking-copy > p:not(.feature-eyebrow){
+    margin: 14px 0 24px;
+    color: #2a2722;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+/* kai1.png has lots of transparent space around the player, so the image is
+   sized by height and shifted so the player (at ~52% across the image) sits
+   near the card's right edge, breaking out over its top and side. */
+.booking-player{
+    position: absolute;
+    bottom: 0;
+    left: 84%;
+    height: 112%;
+    width: auto;
+    max-width: none;
+    transform: translateX(-52%);
+    pointer-events: none;
+    filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.18));
+}
+.contact-details{
+    display: grid;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+}
+.contact-details li{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(184, 141, 42, 0.4);
+}
+.contact-icon{
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #a57a1c;
+    display: grid;
+    place-items: center;
+}
+.contact-icon svg{
+    width: 22px;
+    height: 22px;
+    fill: #faf6ec;
+}
+.contact-detail-label{
+    display: block;
+    color: #3a362f;
+    font-size: 0.85rem;
+}
+.contact-detail-value{
+    display: block;
+    overflow-wrap: break-word;
+    margin-top: 2px;
+    color: #111;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+a.contact-detail-value:hover,
+a.contact-detail-value:focus-visible{
+    color: #8a6512;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px){
+    .contact-inner{
+        grid-template-columns: 1fr;
+    }
+    .contact-form-column{
+        padding-right: 0;
+        border-right: 0;
+    }
+}
+
+@media (max-width: 700px){
+    .contact-hero-inner,
+    .contact-inner{
+        width: calc(100% - 32px);
+    }
+    .contact-hero-inner{
+        grid-template-columns: 1fr;
+    }
+    .contact-hero-player{
+        display: none;
+    }
+    .contact-hero-tagline{
+        gap: 14px;
+        letter-spacing: 0.2em;
+    }
+    .contact-hero-tagline::before{
+        flex-basis: 32px;
+    }
+    .booking-card{
+        padding: 22px;
+    }
+    .booking-player{
+        display: none;
+    }
+}

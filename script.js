@@ -218,3 +218,53 @@ function initFaqWidget() {
 }
 
 initFaqWidget();
+
+/* ---------- Contact form (contact page only) ----------
+   Checks the fields, then opens the visitor's email app with the enquiry
+   filled in. Change CONTACT_EMAIL to the address enquiries should go to. */
+const CONTACT_EMAIL = "info@goshenxballerz.co.uk";
+const contactForm = document.querySelector("#contact-form");
+
+if (contactForm) {
+	const status = contactForm.querySelector(".form-status");
+
+	contactForm.addEventListener("submit", (event) => {
+		event.preventDefault();
+		const fields = [...contactForm.querySelectorAll("input, select, textarea")];
+		let firstInvalid = null;
+
+		fields.forEach((field) => {
+			const valid = field.checkValidity() && field.value.trim() !== "";
+			field.setAttribute("aria-invalid", String(!valid));
+			if (!valid && !firstInvalid) firstInvalid = field;
+		});
+
+		status.classList.remove("is-success");
+		if (firstInvalid) {
+			const label = contactForm.querySelector(`label[for="${firstInvalid.id}"]`);
+			status.textContent = `Please check the "${label ? label.textContent : "highlighted"}" field.`;
+			firstInvalid.focus();
+			return;
+		}
+
+		const data = new FormData(contactForm);
+		const subject = `Coaching enquiry: ${data.get("interest")}`;
+		const body = [
+			`Name: ${data.get("name")}`,
+			`Email: ${data.get("email")}`,
+			`Coaching interest: ${data.get("interest")}`,
+			"",
+			data.get("message"),
+		].join("\n");
+
+		window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+		status.classList.add("is-success");
+		status.textContent = "Your email app should open with your message ready to send.";
+	});
+
+	contactForm.addEventListener("input", (event) => {
+		if (event.target.getAttribute("aria-invalid") === "true" && event.target.checkValidity()) {
+			event.target.setAttribute("aria-invalid", "false");
+		}
+	});
+}
