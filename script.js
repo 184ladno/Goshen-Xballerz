@@ -268,3 +268,40 @@ if (contactForm) {
 		}
 	});
 }
+
+/* ---------- Compact sticky header (every page) ----------
+   Once the full header scrolls out of view, a slim bar with just the
+   logo and company name slides in at the top. Clicking it goes home. */
+function initMiniHeader() {
+	const header = document.querySelector(".header");
+	if (!header) return;
+
+	const logo = header.querySelector(".logo");
+	const title = header.querySelector(".site-title");
+
+	const bar = document.createElement("a");
+	bar.className = "mini-header";
+	bar.href = "index.html";
+	bar.setAttribute("aria-label", "Goshen XBallerz home");
+	bar.tabIndex = -1; // hidden bar shouldn't be tabbed to; enabled when shown
+	bar.innerHTML = `
+		<img class="mini-header-logo" src="${logo ? logo.getAttribute("src") : ""}" alt="">
+		<span class="mini-header-name">${title ? title.textContent : "GOSHEN XBALLERZ"}</span>`;
+	document.body.prepend(bar);
+
+	let shown = null;
+	function update() {
+		const show = header.getBoundingClientRect().bottom <= 0;
+		if (show === shown) return;
+		shown = show;
+		bar.classList.toggle("is-visible", show);
+		bar.tabIndex = show ? 0 : -1;
+		bar.setAttribute("aria-hidden", String(!show));
+	}
+
+	window.addEventListener("scroll", update, { passive: true });
+	window.addEventListener("resize", update);
+	update();
+}
+
+initMiniHeader();
