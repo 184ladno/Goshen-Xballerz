@@ -305,3 +305,39 @@ function initMiniHeader() {
 }
 
 initMiniHeader();
+
+/* ---------- Coach profile pop-ups (coaches page only) ----------
+   Clicking a coach card (or its "View profile" button) opens one shared
+   pop-up filled with that card's photo, role, name and hidden profile. */
+const coachDialog = document.querySelector("#coach-dialog");
+
+if (coachDialog) {
+	const dialogPhoto = coachDialog.querySelector(".coach-dialog-photo");
+	const dialogRole = coachDialog.querySelector(".coach-dialog-role");
+	const dialogName = coachDialog.querySelector("#coach-dialog-title");
+	const dialogProfile = coachDialog.querySelector(".coach-dialog-profile");
+	let lastButton = null;
+
+	function openCoach(card) {
+		const photo = card.querySelector(".team-photo");
+		const profile = card.querySelector(".team-profile");
+		dialogPhoto.replaceChildren(...(photo ? [...photo.children].map((el) => el.cloneNode(true)) : []));
+		dialogRole.textContent = card.querySelector(".team-copy .feature-eyebrow")?.textContent || "";
+		dialogName.textContent = card.querySelector(".team-copy h3")?.textContent || "";
+		dialogProfile.replaceChildren(...(profile ? [...profile.children].map((el) => el.cloneNode(true)) : []));
+		lastButton = card.querySelector(".team-profile-button");
+		coachDialog.showModal();
+	}
+
+	document.querySelectorAll(".team-card").forEach((card) => {
+		card.addEventListener("click", () => openCoach(card));
+	});
+
+	coachDialog.querySelector(".player-dialog-close").addEventListener("click", () => coachDialog.close());
+	coachDialog.addEventListener("click", (event) => {
+		if (event.target === coachDialog) coachDialog.close();
+	});
+	coachDialog.addEventListener("close", () => {
+		if (lastButton) lastButton.focus();
+	});
+}

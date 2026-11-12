@@ -2319,7 +2319,9 @@ body{
     position: absolute;
     bottom: 0;
     left: 84%;
-    height: 80%;
+    /* Fixed height so he doesn't grow when the message box is resized
+       (the card shares a row with the form on wide screens) */
+    height: 640px;
     width: auto;
     max-width: none;
     transform: translateX(-52%);
@@ -2380,6 +2382,11 @@ a.contact-detail-value:focus-visible{
     .contact-form-column{
         padding-right: 0;
         border-right: 0;
+    }
+    /* Card sits on its own row here, so the form can't stretch it:
+       size the player to the card, breaking out over its top edge */
+    .booking-player{
+        height: 118%;
     }
 }
 
@@ -2455,5 +2462,255 @@ a.contact-detail-value:focus-visible{
     .mini-header,
     .mini-header.is-visible{
         transition: none;
+    }
+}
+
+/* ---------- Coaches page ---------- */
+/* Hero reuses the Contact page banner; the intro line sits under the heading */
+.coaches-hero .about-lead{
+    max-width: 480px;
+    margin-top: 16px;
+}
+
+/* Team grid */
+.team{
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: clamp(64px, 9vw, 112px) 0;
+}
+.team-inner,
+.coaches-cta-inner{
+    box-sizing: border-box;
+    width: min(1240px, calc(100% - 48px));
+    margin: 0 auto;
+}
+.team-intro{
+    max-width: 640px;
+}
+.team-intro h2,
+.coaches-cta h2{
+    margin: 0;
+    color: antiquewhite;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.1;
+}
+.team-intro > p:last-child,
+.coaches-cta-inner p:last-child{
+    margin: 14px 0 0;
+    color: #c9c4b8;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+.team-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+    margin: 48px 0 0;
+    padding: 0;
+    list-style: none;
+}
+.team-card{
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(218, 165, 32, 0.3);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #292720, #171716 72%);
+    transition: border-color 160ms ease, transform 160ms ease;
+}
+.team-card:hover{
+    border-color: rgba(218, 165, 32, 0.65);
+    transform: translateY(-3px);
+}
+.team-photo{
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.25);
+    background:
+        radial-gradient(ellipse at 12% 0%, rgba(218, 165, 32, 0.14), transparent 45%),
+        linear-gradient(145deg, #292720, #171716 72%);
+}
+.team-photo img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.team-copy{
+    padding: 24px 24px 28px;
+}
+.team-copy .feature-eyebrow{
+    margin-bottom: 8px;
+}
+.team-copy h3{
+    margin: 0;
+    color: antiquewhite;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+.team-copy > p:not(.feature-eyebrow){
+    margin: 12px 0 0;
+    color: #c9c4b8;
+    font-size: 0.98rem;
+    line-height: 1.65;
+}
+.team-tags{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+}
+.team-tags li{
+    padding: 5px 12px;
+    border: 1px solid rgba(218, 165, 32, 0.45);
+    border-radius: 999px;
+    color: rgb(229, 203, 135);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+/* "View profile" button on each card */
+.team-copy{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.team-profile-button{
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding: 18px 0 0;
+    border: 0;
+    background: none;
+    color: rgb(229, 203, 135);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.team-profile-button span{
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 1;
+    transition: background-color 160ms ease, color 160ms ease;
+}
+.team-card:hover .team-profile-button span,
+.team-profile-button:focus-visible span{
+    background: rgb(229, 203, 135);
+    color: #171615;
+}
+.team-profile-button:focus-visible{
+    outline: 2px solid rgb(229, 203, 135);
+    outline-offset: 4px;
+}
+
+/* Coach pop-up (reuses the home page player pop-up look, but wider) */
+.player-dialog.coach-dialog{
+    width: min(820px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+}
+.coach-dialog-content{
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 28px;
+    align-items: start;
+}
+.coach-dialog-photo{
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid rgba(218, 165, 32, 0.35);
+    border-radius: 12px;
+    background:
+        radial-gradient(ellipse at 12% 0%, rgba(218, 165, 32, 0.14), transparent 45%),
+        linear-gradient(145deg, #292720, #171716 72%);
+}
+.coach-dialog-photo img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.coach-dialog-body{
+    padding-right: 24px;
+}
+.coach-dialog-profile > p{
+    margin: 0;
+    color: #ded8cb;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+.coach-dialog-profile .coach-details{
+    margin-top: 24px;
+    gap: 20px;
+}
+
+/* Closing call to action */
+.coaches-cta{
+    position: relative;
+    z-index: 2;
+    padding: 0 0 clamp(72px, 10vw, 120px);
+}
+.coaches-cta-inner{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: clamp(28px, 4vw, 48px);
+    border: 1px solid rgba(218, 165, 32, 0.45);
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(218, 165, 32, 0.18), transparent 55%),
+        linear-gradient(145deg, #292720, #171716 72%);
+}
+.coaches-cta h2{
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+
+@media (max-width: 700px){
+    .team-inner,
+    .coaches-cta-inner{
+        width: calc(100% - 32px);
+    }
+    .coaches-cta-inner{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .coach-dialog-content{
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .coach-dialog-photo{
+        width: 140px;
+    }
+    .coach-dialog-body{
+        padding-right: 0;
+    }
+    .coach-dialog-profile .coach-details{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .team-card{
+        transition: none;
+    }
+    .team-card:hover{
+        transform: none;
     }
 }
