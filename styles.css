@@ -2319,7 +2319,9 @@ body{
     position: absolute;
     bottom: 0;
     left: 84%;
-    height: 112%;
+    /* Fixed height so he doesn't grow when the card gets taller
+       (e.g. when the message box is resized) */
+    height: 640px;
     width: auto;
     max-width: none;
     transform: translateX(-52%);
