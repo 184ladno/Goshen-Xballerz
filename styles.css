@@ -2319,9 +2319,7 @@ body{
     position: absolute;
     bottom: 0;
     left: 84%;
-    /* Fixed height so he doesn't grow when the card gets taller
-       (e.g. when the message box is resized) */
-    height: 640px;
+    height: 80%;
     width: auto;
     max-width: none;
     transform: translateX(-52%);
@@ -2393,15 +2391,8 @@ a.contact-detail-value:focus-visible{
     .contact-hero-inner{
         grid-template-columns: 1fr;
     }
-    .contact-hero-inner{
-        min-height: 240px;
-    }
-    /* On phones the player sits at the right edge, behind the slogan */
     .contact-hero-player{
-        right: -70px;
-        top: 12px;
-        height: 200%;
-        opacity: 0.85;
+        display: none;
     }
     .contact-hero-tagline{
         gap: 14px;
@@ -2415,54 +2406,5 @@ a.contact-detail-value:focus-visible{
     }
     .booking-player{
         display: none;
-    }
-}
-
-/* ---------- Compact sticky header (added by script.js on every page) ---------- */
-.mini-header{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
-    box-sizing: border-box;
-    height: 60px;
-    padding: 0 clamp(16px, 3vw, 32px);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(36, 36, 34, 0.96);
-    border-bottom: 1px solid goldenrod;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-    color: rgb(248, 217, 140);
-    font-family: Arial, Helvetica, sans-serif;
-    text-decoration: none;
-    transform: translateY(-100%);
-    visibility: hidden;
-    transition: transform 220ms ease, visibility 0s linear 220ms;
-}
-.mini-header.is-visible{
-    transform: translateY(0);
-    visibility: visible;
-    transition: transform 220ms ease, visibility 0s;
-}
-.mini-header-logo{
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-}
-.mini-header-name{
-    font-size: 1.1rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-.mini-header:focus-visible{
-    outline: 2px solid rgb(248, 217, 140);
-    outline-offset: -4px;
-}
-@media (prefers-reduced-motion: reduce){
-    .mini-header,
-    .mini-header.is-visible{
-        transition: none;
     }
 }
