@@ -220,17 +220,27 @@ function initFaqWidget() {
 initFaqWidget();
 
 /* ---------- Contact form (contact page only) ----------
-   Checks the fields, then opens the visitor's email app with the enquiry
-   filled in. Change CONTACT_EMAIL to the address enquiries should go to. */
-const CONTACT_EMAIL = "info@goshenxballerz.co.uk";
+   Checks the fields, then sends them to proccess.php, which emails the
+   enquiry. The page stays put and shows a message when it's sent. */
 const contactForm = document.querySelector("#contact-form");
 
 if (contactForm) {
 	const status = contactForm.querySelector(".form-status");
+	const submitButton = contactForm.querySelector('[type="submit"]');
+	const fields = [...contactForm.querySelectorAll("input:not([name='website']), select, textarea")];
 
-	contactForm.addEventListener("submit", (event) => {
+	function showStatus(message, success) {
+		status.textContent = message;
+		status.classList.toggle("is-success", success);
+	}
+
+	// Result after a no-JavaScript submit (proccess.php redirects back with ?sent=1 or 0)
+	const sent = new URLSearchParams(location.search).get("sent");
+	if (sent === "1") showStatus("Thanks, your message has been sent. We'll get back to you soon.", true);
+	if (sent === "0") showStatus("Sorry, your message could not be sent. Please call or email us instead.", false);
+
+	contactForm.addEventListener("submit", async (event) => {
 		event.preventDefault();
-		const fields = [...contactForm.querySelectorAll("input, select, textarea")];
 		let firstInvalid = null;
 
 		fields.forEach((field) => {
@@ -239,27 +249,33 @@ if (contactForm) {
 			if (!valid && !firstInvalid) firstInvalid = field;
 		});
 
-		status.classList.remove("is-success");
 		if (firstInvalid) {
 			const label = contactForm.querySelector(`label[for="${firstInvalid.id}"]`);
-			status.textContent = `Please check the "${label ? label.textContent : "highlighted"}" field.`;
+			showStatus(`Please check the "${label ? label.textContent : "highlighted"}" field.`, false);
 			firstInvalid.focus();
 			return;
 		}
 
-		const data = new FormData(contactForm);
-		const subject = `Coaching enquiry: ${data.get("interest")}`;
-		const body = [
-			`Name: ${data.get("name")}`,
-			`Email: ${data.get("email")}`,
-			`Coaching interest: ${data.get("interest")}`,
-			"",
-			data.get("message"),
-		].join("\n");
+		submitButton.disabled = true;
+		showStatus("Sending...", true);
 
-		window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-		status.classList.add("is-success");
-		status.textContent = "Your email app should open with your message ready to send.";
+		try {
+			const response = await fetch(contactForm.action, {
+				method: "POST",
+				body: new FormData(contactForm),
+				headers: { Accept: "application/json" },
+			});
+			const result = await response.json();
+			showStatus(result.message, Boolean(result.ok));
+			if (result.ok) {
+				contactForm.reset();
+				fields.forEach((field) => field.removeAttribute("aria-invalid"));
+			}
+		} catch {
+			showStatus("Sorry, your message could not be sent. Please call or email us instead.", false);
+		} finally {
+			submitButton.disabled = false;
+		}
 	});
 
 	contactForm.addEventListener("input", (event) => {

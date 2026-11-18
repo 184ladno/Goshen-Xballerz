@@ -58,9 +58,14 @@
                     <h2 id="contact-form-title">Get in touch</h2>
                     <p class="contact-lead">Have a question or ready to book? Send us a message and we'll get back to you as soon as possible.</p>
 
-                    <!-- The form opens the visitor's email app with the message filled in.
-                         Set the address in script.js (CONTACT_EMAIL). -->
-                    <form class="contact-form" id="contact-form" aria-labelledby="contact-form-title" novalidate>
+                    <!-- Sends to proccess.php, which emails the enquiry
+                         (the recipient address is set at the top of proccess.php) -->
+                    <form class="contact-form" id="contact-form" action="proccess.php" method="post" aria-labelledby="contact-form-title" novalidate>
+                        <!-- Spam trap: hidden from visitors, only bots fill it in -->
+                        <div class="form-trap" aria-hidden="true">
+                            <label for="contact-website">Website</label>
+                            <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-field">
                             <label for="contact-name">Parent / carer name</label>
                             <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
@@ -115,7 +120,7 @@
                                 </span>
                                 <span>
                                     <span class="contact-detail-label">Email</span>
-                                    <!-- Replace with the real address (also update CONTACT_EMAIL in script.js) -->
+                                    <!-- Replace with the address you want shown to visitors -->
                                     <a class="contact-detail-value" href="mailto:info@goshenxballerz.co.uk">info@goshenxballerz.co.uk</a>
                                 </span>
                             </li>

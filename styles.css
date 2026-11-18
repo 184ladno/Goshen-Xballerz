@@ -2714,3 +2714,17 @@ a.contact-detail-value:focus-visible{
         transform: none;
     }
 }
+
+/* Contact form spam trap: kept off-screen so only bots fill it in */
+.form-trap{
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+.contact-submit:disabled{
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+}
