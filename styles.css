@@ -205,6 +205,53 @@ body{
 .header-button:focus-visible .header-button-arrow img{
     filter: brightness(0);
 }
+/* Menu (☰) button and the drop-down's Membership link: both added by
+   script.js and only shown on phones (see the 700px rules below) */
+.menu-toggle{
+    display: none;
+    flex-shrink: 0;
+    place-content: center;
+    gap: 6px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.menu-toggle span{
+    display: block;
+    width: 30px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--gold-light);
+    transition: transform 200ms ease, opacity 200ms ease;
+}
+/* Turns into an X when the menu is open */
+.header.is-menu-open .menu-toggle span:nth-child(1){
+    transform: translateY(9px) rotate(45deg);
+}
+.header.is-menu-open .menu-toggle span:nth-child(2){
+    opacity: 0;
+}
+.header.is-menu-open .menu-toggle span:nth-child(3){
+    transform: translateY(-9px) rotate(-45deg);
+}
+.menu-toggle:focus-visible{
+    outline: 2px solid var(--gold-light);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+.header .nav-membership{
+    display: none;
+}
+@media (prefers-reduced-motion: reduce){
+    .menu-toggle span,
+    .header nav{
+        transition: none !important;
+    }
+}
+
 /* Current page in the main menu: keep it highlighted and underlined */
 .header ul li a[aria-current="page"]{
     color: var(--gold-light);
@@ -311,7 +358,7 @@ body{
     position: absolute;
     /* Above the feature section (z-index 2) so the player steps out of the hero */
     z-index: 5;
-    right: clamp(5px, 2vw, 50px);
+    right: clamp(0px, 0.8vw, 16px);
     top: -1.5em;
     width: auto;
     height: 130%;
@@ -322,7 +369,8 @@ body{
     background: transparent;
     cursor: pointer;
     animation: player-enter 900ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
-    transition: all 180ms ease;
+    /* No "transition: all" here: it made the player slide and stretch
+       while the window was being resized. The hover effect is on the img. */
 }
 .hero-player img{
     display: block;
@@ -653,8 +701,30 @@ body{
     }
 }
 
-/* Header on tablets: menu moves onto its own line */
+/* Header on tablets: menu moves onto its own line.
+   Home hero on tablets: the three icons stack in a column so the player
+   doesn't cover them. */
+/* Small laptops: keep the hero text clear of the player's arm */
+@media (max-width: 1200px){
+    .title{
+        max-width: 44%;
+    }
+    /* ...but keep "Football is won" on one line */
+    .title h1{
+        white-space: nowrap;
+    }
+}
+
 @media (max-width: 1000px){
+    .description{
+        max-width: 46%;
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+    .description p{
+        padding: 6px 0;
+    }
+
     .header{
         flex-wrap: wrap;
         row-gap: 4px;
@@ -676,64 +746,146 @@ body{
 
 /* Header + home hero + scroll section on phones */
 @media (max-width: 700px){
+    /* Phone header (matches the mobile design): logo | divider | Book Coaching | menu button.
+       The page links and Membership open in a drop-down from the menu button (script.js). */
     .header{
+        position: sticky;
+        top: 0;
+        z-index: 950;
+        flex-wrap: nowrap;
         min-height: 0;
-        padding: 4px 6px 6px;
-        gap: 8px 12px;
+        padding: 10px 16px;
+        gap: 14px;
+        border: 0;
+        border-bottom: 1px solid var(--gold);
+        border-radius: 0;
+        background-color: #111110;
     }
 
-    .header .logo{
-        height: 56px;
+    .header .logo,
+    .home-btn{
+        height: 58px;
     }
 
     .home-btn{
-        height: 56px;
+        padding: 0;
     }
 
-    .header h1{
-        font-size: clamp(0.9rem, 4vw, 1.15rem);
+    /* Thin gold divider after the logo (the brand block shrinks to a 1px line) */
+    .header-brand{
+        display: block;
+        align-self: stretch;
+        width: 1px;
+        margin: 6px 0;
+        overflow: hidden;
+        background: rgba(218, 165, 32, 0.6);
     }
-
-    .header-brand p{
-        font-size: 0.5rem;
-        letter-spacing: 0.04em;
-        white-space: normal;
+    .header-brand > *{
+        display: none;
     }
 
     .header-actions{
-        width: 100%;
-        margin-left: 0;
-        gap: 8px;
+        margin-left: auto;
+        gap: 10px;
     }
 
-    .header-button{
-        flex: 1;
-        justify-content: center;
-        gap: 6px;
-        padding: 7px 8px;
-        text-align: center;
-        font-size: 0.8em;
+    /* Membership moves into the drop-down menu on phones */
+    .header-actions .header-button:not(.header-button-primary){
+        display: none;
     }
 
+    .header-button-primary{
+        gap: 10px;
+        padding: 10px 12px 10px 16px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .header-button-primary .header-button-arrow{
+        width: 22px;
+        height: 22px;
+    }
+
+    .menu-toggle{
+        display: grid;
+    }
+
+    /* Drop-down menu */
     .header nav{
-        flex-basis: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        order: 0;
+        flex: none;
+        padding: 8px 16px 18px;
+        border-bottom: 1px solid var(--gold);
+        background: #111110;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55);
+        transform: translateY(-8px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+    }
+    .header.is-menu-open nav{
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 180ms ease, transform 180ms ease, visibility 0s;
     }
 
     .header nav ul{
-        justify-content: center;
-        gap: 4px 14px;
-        padding-top: 6px;
-        border-top: 1px solid rgba(218, 165, 32, 0.25);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        border-top: 0;
     }
 
     .header ul li{
-        font-size: 0.75em;
+        padding: 0;
+        font-size: 1rem;
+        border-bottom: 1px solid rgba(218, 165, 32, 0.18);
+    }
+    .header ul li:last-child{
+        border-bottom: 0;
+    }
+
+    .header ul li a{
+        display: block;
+        padding: 15px 4px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+    }
+    .header ul li a::after{
+        content: none;
+    }
+    .header ul li a[aria-current="page"]{
+        color: var(--gold-light);
+    }
+
+    /* Membership link added to the drop-down by script.js */
+    .header .nav-membership{
+        display: block;
+    }
+    .header .nav-membership a{
+        color: var(--gold-light);
+    }
+
+    /* The compact sticky bar isn't needed: this header already stays at the top */
+    .mini-header{
+        display: none;
     }
     .navbar{
-        min-height: 480px;
+        /* Hero height = 60% of the phone's screen height, but never shorter
+           than 360px or taller than 480px. (vh = % of the screen height;
+           svh is the same but ignores the browser's address bar on phones.) */
+        min-height: clamp(360px, 60vh, 480px);
+        min-height: clamp(360px, 60svh, 480px);
         align-items: stretch;
         gap: 8px;
-        padding: 20px 16px 48px;
+        padding: 20px 16px 28px;
         background-position: center;
         /* Crops the player at the right edge on phones */
         overflow: hidden;
@@ -777,15 +929,24 @@ body{
     }
 
     .hero-player{
-        /* Player stays on the right, partly cropped by the screen edge;
-           sits under the text and under the bottom fade so the legs melt into the dark */
+        /* Big player on the right (like the mobile design): head near the top,
+           cropped by the right edge and the bottom of the hero. Sits under the
+           text and under the bottom fade so the legs melt into the dark. */
         position: absolute;
         z-index: 1;
-        top: auto;
-        bottom: 0;
-        right: -80px;
+        top: 8px;
+        bottom: auto;
+        /* "left" = where his centre goes (translateX(-50%) centres him on it).
+           His centre sits 70px from the right edge on narrow phones (so his
+           face clears the text), easing smoothly to 120px by 520px wide.
+           One formula, no jumps while the screen is resized. */
+        left: calc(100% - clamp(70px, 55vw - 166px, 120px));
+        right: auto;
+        transform: translateX(-50%);
         width: auto;
-        height: 88%;
+        /* Size follows the screen WIDTH (vw), never smaller than 480px or
+           bigger than 640px, so he stays big; the hero crops his legs. */
+        height: clamp(480px, 110vw, 640px);
         max-width: none;
         margin: 0;
         animation: none;
@@ -856,6 +1017,35 @@ body{
     }
 
 }
+
+/* Very small phones (e.g. iPhone SE): tighten the header so everything fits */
+@media (max-width: 380px){
+    .header{
+        padding: 8px 12px;
+        gap: 10px;
+    }
+    .header .logo,
+    .home-btn{
+        height: 48px;
+    }
+    .header-button-primary{
+        gap: 6px;
+        padding: 9px 10px 9px 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+    }
+    .header-button-primary .header-button-arrow{
+        width: 18px;
+        height: 18px;
+    }
+    .menu-toggle{
+        width: 36px;
+    }
+    .menu-toggle span{
+        width: 26px;
+    }
+}
+
 
 /* ---------- 6. Page container below the hero ----------
    Wraps the coach intro, features and reviews in one gold-edged panel with

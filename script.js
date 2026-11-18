@@ -13,6 +13,7 @@
      5. Contact form         (contact page)
      6. Compact sticky header (every page)
      7. Coach profile pop-ups (coaches page)
+     8. Phone menu           (every page)
 
    Tip: if something stops working, open the browser's developer tools
    (F12 → Console). Errors there show the line number in this file.
@@ -401,6 +402,62 @@ function initCoachDialogs() {
 }
 
 
+/* ---------- 8. Phone menu (every page) ----------
+   Adds a menu (☰) button to the header. On phones the page links are
+   hidden behind it and open as a drop-down; Membership is added to the
+   drop-down too. On larger screens the button is hidden by the CSS. */
+function initPhoneMenu() {
+	const header = document.querySelector(".header");
+	const nav = header && header.querySelector("nav");
+	const list = nav && nav.querySelector("ul");
+	if (!header || !nav || !list) return;
+
+	nav.id = nav.id || "main-menu";
+
+	// Membership link inside the drop-down (copied from the header button)
+	const membership = header.querySelector('.header-actions a[href="membership.html"]');
+	if (membership) {
+		const item = document.createElement("li");
+		item.className = "nav-membership";
+		item.innerHTML = '<a href="membership.html">MEMBERSHIP</a>';
+		list.append(item);
+	}
+
+	const toggle = document.createElement("button");
+	toggle.type = "button";
+	toggle.className = "menu-toggle";
+	toggle.setAttribute("aria-label", "Open menu");
+	toggle.setAttribute("aria-expanded", "false");
+	toggle.setAttribute("aria-controls", nav.id);
+	toggle.innerHTML = "<span></span><span></span><span></span>";
+	header.append(toggle);
+
+	function setOpen(open) {
+		header.classList.toggle("is-menu-open", open);
+		toggle.setAttribute("aria-expanded", String(open));
+		toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+	}
+
+	toggle.addEventListener("click", () => setOpen(!header.classList.contains("is-menu-open")));
+	nav.addEventListener("click", (event) => {
+		if (event.target.closest("a")) setOpen(false);
+	});
+	document.addEventListener("click", (event) => {
+		if (!header.contains(event.target)) setOpen(false);
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && header.classList.contains("is-menu-open")) {
+			setOpen(false);
+			toggle.focus();
+		}
+	});
+	// Close it if the screen gets wider than a phone (e.g. rotating a tablet)
+	window.matchMedia("(min-width: 701px)").addEventListener("change", (event) => {
+		if (event.matches) setOpen(false);
+	});
+}
+
+
 /* ---------- Start everything ---------- */
 initPlayerDialog();
 document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
@@ -409,3 +466,4 @@ initFaqWidget();
 initContactForm();
 initMiniHeader();
 initCoachDialogs();
+initPhoneMenu();
