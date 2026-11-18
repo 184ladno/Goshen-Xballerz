@@ -1,0 +1,5 @@
+# Contact form email settings (contains the Gmail app password)
+mail-config.php
+
+# macOS
+.DS_Store
