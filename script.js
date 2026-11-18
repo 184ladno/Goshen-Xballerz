@@ -1,36 +1,80 @@
-/* ---------- Player pop-up (home page only) ---------- */
-const playerTrigger = document.querySelector(".hero-player");
-const playerDialog = document.querySelector("#player-dialog");
+/* =====================================================================
+   GOSHEN XBALLERZ – SITE SCRIPT (loaded by every page)
+   ---------------------------------------------------------------------
+   Every feature below checks whether its HTML exists on the current page
+   before doing anything, so one file can serve all pages safely.
 
-if (playerTrigger && playerDialog) {
-	const playerDialogClose = playerDialog.querySelector(".player-dialog-close");
+   CONTENTS (search for the "----------" headings):
+     0. Settings            ← the things you are most likely to edit
+     1. Player pop-up        (home page)
+     2. Feature scroll section (home page)
+     3. Scrolling behaviour  (every page)
+     4. FAQ widget           (every page)
+     5. Contact form         (contact page)
+     6. Compact sticky header (every page)
+     7. Coach profile pop-ups (coaches page)
 
-	playerTrigger.addEventListener("click", () => {
-		playerDialog.showModal();
-	});
+   Tip: if something stops working, open the browser's developer tools
+   (F12 → Console). Errors there show the line number in this file.
+   ===================================================================== */
 
-	playerDialogClose.addEventListener("click", () => {
-		playerDialog.close();
-	});
 
-	playerDialog.addEventListener("click", (event) => {
-		if (event.target === playerDialog) {
-			playerDialog.close();
-		}
+/* ---------- 0. Settings ---------- */
+
+// Address the contact form sends enquiries to.
+// (Also update the email link shown on contact.html.)
+const CONTACT_EMAIL = "info@goshenxballerz.co.uk";
+
+// Popular questions shown in the FAQ pop-up on every page.
+// Add or remove { question, answer } lines as needed.
+const POPULAR_QUESTIONS = [
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+	{ question: "[Question]", answer: "[Answer]" },
+];
+
+// "Have a question?" speech bubble beside the FAQ button (milliseconds).
+const HINT_FIRST_DELAY = 5000;   // first appearance after the page loads
+const HINT_VISIBLE_FOR = 5000;   // how long it stays on screen
+const HINT_REPEAT_EVERY = 20000; // time between appearances
+
+
+/* ---------- Small helper used by several pop-ups ----------
+   Lets a <dialog> close when the visitor clicks the dark area around it. */
+function closeOnBackdropClick(dialog) {
+	dialog.addEventListener("click", (event) => {
+		if (event.target === dialog) dialog.close();
 	});
 }
 
-/* ---------- Scroll-driven sticky feature section ----------
-   The right-hand .feature-copy articles are the single source of truth.
-   Each article's .feature-summary is cloned into the sticky left panel,
-   and an IntersectionObserver watching a thin line at the viewport centre
-   decides which article (and therefore which left panel) is active. */
+
+/* ---------- 1. Player pop-up (home page) ----------
+   Clicking the big player image opens #player-dialog. */
+function initPlayerDialog() {
+	const trigger = document.querySelector(".hero-player");
+	const dialog = document.querySelector("#player-dialog");
+	if (!trigger || !dialog) return;
+
+	trigger.addEventListener("click", () => dialog.showModal());
+	dialog.querySelector(".player-dialog-close").addEventListener("click", () => dialog.close());
+	closeOnBackdropClick(dialog);
+}
+
+
+/* ---------- 2. Feature scroll section (home page) ----------
+   The right-hand .feature-copy articles in index.html are the single
+   source of truth: to change the text/images, edit those articles only.
+   Each article's .feature-summary is copied into the sticky left panel,
+   and the step nearest the middle of the screen becomes "active". */
 function initFeatureShowcase(section) {
 	const articles = [...section.querySelectorAll(".feature-copy[data-feature]")];
 	const stage = section.querySelector(".feature-description-stage");
 	const progress = section.querySelector(".feature-progress");
 	if (!articles.length || !stage) return;
 
+	// Build one left-hand panel (and one numbered progress dot) per article.
 	const panels = articles.map((article, index) => {
 		const panel = document.createElement("article");
 		panel.className = "feature-description-panel";
@@ -48,13 +92,14 @@ function initFeatureShowcase(section) {
 		if (progress) {
 			const dot = document.createElement("li");
 			dot.dataset.step = article.dataset.feature;
-			dot.textContent = String(index + 1).padStart(2, "0");
+			dot.textContent = String(index + 1).padStart(2, "0"); // 01, 02, 03…
 			progress.append(dot);
 		}
 		return panel;
 	});
 	const dots = progress ? [...progress.children] : [];
 
+	// Highlight one step (by its data-feature name) everywhere at once.
 	let activeName = null;
 	function setActive(name) {
 		if (name === activeName) return;
@@ -70,10 +115,9 @@ function initFeatureShowcase(section) {
 
 	setActive(articles[0].dataset.feature);
 
-	if (!("IntersectionObserver" in window)) return;
+	if (!("IntersectionObserver" in window)) return; // very old browsers: first step stays active
 
-	// Active step = the last article whose top edge has passed the viewport centre.
-	// Only four rect reads, and only when an observer reports a change.
+	// Active step = the last article whose top edge has passed the middle of the screen.
 	function updateActive() {
 		const centre = window.innerHeight / 2;
 		let current = articles[0];
@@ -83,9 +127,8 @@ function initFeatureShowcase(section) {
 		setActive(current.dataset.feature);
 	}
 
-	// Triggers: articles crossing a band around the viewport centre (normal scrolling),
-	// plus the whole list entering/leaving the viewport (jumps, reloads mid-page).
-	// Fine-grained thresholds so the callback also fires while an edge moves through the band.
+	// Re-check when an article moves through the middle band of the screen,
+	// or when the whole list enters/leaves the screen (jumps, reloads mid-page).
 	const bandThresholds = Array.from({ length: 21 }, (_, i) => i / 20);
 	const bandObserver = new IntersectionObserver(updateActive, { rootMargin: "-40% 0px -40% 0px", threshold: bandThresholds });
 	articles.forEach((article) => bandObserver.observe(article));
@@ -94,46 +137,42 @@ function initFeatureShowcase(section) {
 	listObserver.observe(section.querySelector(".feature-list"));
 }
 
-document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
 
-/* ---------- Always start at the top on reload ----------
-   In-page links (e.g. "Read reviews") scroll smoothly without adding a #hash
-   to the address. On a reload the page starts at the top; a link from another
-   page to a section (e.g. index.html#features-title) still jumps to it. */
-if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+/* ---------- 3. Scrolling behaviour (every page) ----------
+   - Reloading a page always starts at the top.
+   - In-page links (e.g. "Read reviews" → #reviews) scroll smoothly
+     without adding #reviews to the address bar.
+   - A link from another page to a section (e.g. index.html#reviews)
+     still jumps straight to it. */
+function initScrolling() {
+	if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
-const navigationEntry = performance.getEntriesByType("navigation")[0];
-if (navigationEntry && navigationEntry.type === "reload") {
-	if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-	window.addEventListener("load", () => window.scrollTo(0, 0));
+	const navigationEntry = performance.getEntriesByType("navigation")[0];
+	if (navigationEntry && navigationEntry.type === "reload") {
+		if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+		window.addEventListener("load", () => window.scrollTo(0, 0));
+	}
+
+	document.querySelectorAll('a[href^="#"]').forEach((link) => {
+		link.addEventListener("click", (event) => {
+			const target = document.getElementById(link.getAttribute("href").slice(1));
+			if (!target) return;
+			event.preventDefault();
+			target.scrollIntoView(); // smooth via CSS scroll-behavior (respects reduced motion)
+		});
+	});
 }
 
-document.querySelectorAll('a[href^="#"]').forEach((link) => {
-	link.addEventListener("click", (event) => {
-		const target = document.getElementById(link.getAttribute("href").slice(1));
-		if (!target) return;
-		event.preventDefault();
-		target.scrollIntoView(); // smooth via CSS scroll-behavior (respects reduced motion)
-	});
-});
 
-/* ---------- Popular questions widget (every page) ----------
-   A fixed avatar button in the bottom-right corner opens a pop-up with the
-   FAQ. Edit the questions here — they appear on every page that loads
-   script.js. Add or remove { question, answer } entries as needed. */
-const popularQuestions = [
-	{ question: "[Question]", answer: "[Answer]" },
-	{ question: "[Question]", answer: "[Answer]" },
-	{ question: "[Question]", answer: "[Answer]" },
-	{ question: "[Question]", answer: "[Answer]" },
-	{ question: "[Question]", answer: "[Answer]" },
-];
-
+/* ---------- 4. FAQ widget (every page) ----------
+   Adds the round avatar button in the bottom-right corner. Clicking it
+   opens a pop-up listing POPULAR_QUESTIONS (see Settings at the top).
+   All of its HTML is created here, so it doesn't appear in the .html files. */
 function initFaqWidget() {
 	const widget = document.createElement("div");
 	widget.className = "faq-widget";
 
-	const items = popularQuestions.map(({ question, answer }) => `
+	const items = POPULAR_QUESTIONS.map(({ question, answer }) => `
 		<details class="faq-item">
 			<summary>
 				<span class="faq-question">${question}</span>
@@ -162,6 +201,7 @@ function initFaqWidget() {
 	const button = widget.querySelector(".faq-widget-button");
 	const popup = widget.querySelector(".faq-popup");
 	const close = widget.querySelector(".faq-popup-close");
+	const hint = widget.querySelector(".faq-widget-hint");
 
 	function setOpen(open) {
 		popup.hidden = !open;
@@ -170,12 +210,7 @@ function initFaqWidget() {
 		if (open) close.focus();
 	}
 
-	/* "Have a question?" hint: first appears 5 seconds after the page loads,
-	   then pops up now and then until the visitor clicks the button. */
-	const hint = widget.querySelector(".faq-widget-hint");
-	const HINT_FIRST_DELAY = 5000; // first appearance after page load
-	const HINT_VISIBLE_FOR = 5000; // how long it stays on screen
-	const HINT_REPEAT_EVERY = 20000; // time between appearances
+	// "Have a question?" bubble: pops up now and then until the button is clicked.
 	let hintDismissed = false;
 	let hintInterval;
 	const hintTimers = [];
@@ -198,6 +233,7 @@ function initFaqWidget() {
 		hintInterval = setInterval(showHint, HINT_REPEAT_EVERY);
 	}, HINT_FIRST_DELAY));
 
+	// Open / close: the button toggles, × closes, Esc closes, clicking elsewhere closes.
 	button.addEventListener("click", () => {
 		dismissHint();
 		setOpen(popup.hidden);
@@ -217,14 +253,14 @@ function initFaqWidget() {
 	});
 }
 
-initFaqWidget();
 
-/* ---------- Contact form (contact page only) ----------
+/* ---------- 5. Contact form (contact page only) ----------
    Checks the fields, then sends them to proccess.php, which emails the
-   enquiry. The page stays put and shows a message when it's sent. */
-const contactForm = document.querySelector("#contact-form");
+   enquiry. The page stays put and shows a message when it is sent. */
+function initContactForm() {
+	const contactForm = document.querySelector("#contact-form");
+	if (!contactForm) return;
 
-if (contactForm) {
 	const status = contactForm.querySelector(".form-status");
 	const submitButton = contactForm.querySelector('[type="submit"]');
 	const fields = [...contactForm.querySelectorAll("input:not([name='website']), select, textarea")];
@@ -241,6 +277,7 @@ if (contactForm) {
 
 	contactForm.addEventListener("submit", async (event) => {
 		event.preventDefault();
+
 		let firstInvalid = null;
 
 		fields.forEach((field) => {
@@ -278,6 +315,7 @@ if (contactForm) {
 		}
 	});
 
+	// Remove the red error outline as soon as a field becomes valid.
 	contactForm.addEventListener("input", (event) => {
 		if (event.target.getAttribute("aria-invalid") === "true" && event.target.checkValidity()) {
 			event.target.setAttribute("aria-invalid", "false");
@@ -285,9 +323,11 @@ if (contactForm) {
 	});
 }
 
-/* ---------- Compact sticky header (every page) ----------
-   Once the full header scrolls out of view, a slim bar with just the
-   logo and company name slides in at the top. Clicking it goes home. */
+
+/* ---------- 6. Compact sticky header (every page) ----------
+   Once the full header scrolls out of view, a slim bar with the logo and
+   name slides in at the top. It copies the logo and name from the main
+   header, so there's nothing to edit here. Clicking it goes home. */
 function initMiniHeader() {
 	const header = document.querySelector(".header");
 	if (!header) return;
@@ -299,7 +339,7 @@ function initMiniHeader() {
 	bar.className = "mini-header";
 	bar.href = "index.html";
 	bar.setAttribute("aria-label", "Goshen XBallerz home");
-	bar.tabIndex = -1; // hidden bar shouldn't be tabbed to; enabled when shown
+	bar.tabIndex = -1; // can't be tabbed to while hidden
 	bar.innerHTML = `
 		<img class="mini-header-logo" src="${logo ? logo.getAttribute("src") : ""}" alt="">
 		<span class="mini-header-name">${title ? title.textContent : "GOSHEN XBALLERZ"}</span>`;
@@ -320,40 +360,52 @@ function initMiniHeader() {
 	update();
 }
 
-initMiniHeader();
 
-/* ---------- Coach profile pop-ups (coaches page only) ----------
-   Clicking a coach card (or its "View profile" button) opens one shared
-   pop-up filled with that card's photo, role, name and hidden profile. */
-const coachDialog = document.querySelector("#coach-dialog");
+/* ---------- 7. Coach profile pop-ups (coaches page) ----------
+   Clicking a coach card opens ONE shared pop-up (#coach-dialog) and fills
+   it with that card's photo, role, name and hidden .team-profile content.
+   To change a coach's pop-up text, edit their .team-profile in coaches.html. */
+function initCoachDialogs() {
+	const dialog = document.querySelector("#coach-dialog");
+	if (!dialog) return;
 
-if (coachDialog) {
-	const dialogPhoto = coachDialog.querySelector(".coach-dialog-photo");
-	const dialogRole = coachDialog.querySelector(".coach-dialog-role");
-	const dialogName = coachDialog.querySelector("#coach-dialog-title");
-	const dialogProfile = coachDialog.querySelector(".coach-dialog-profile");
+	const dialogPhoto = dialog.querySelector(".coach-dialog-photo");
+	const dialogRole = dialog.querySelector(".coach-dialog-role");
+	const dialogName = dialog.querySelector("#coach-dialog-title");
+	const dialogProfile = dialog.querySelector(".coach-dialog-profile");
 	let lastButton = null;
 
+	// Copy the children of `source` into `target` (or empty it if there's no source).
+	const copyInto = (target, source) =>
+		target.replaceChildren(...(source ? [...source.children].map((el) => el.cloneNode(true)) : []));
+
 	function openCoach(card) {
-		const photo = card.querySelector(".team-photo");
-		const profile = card.querySelector(".team-profile");
-		dialogPhoto.replaceChildren(...(photo ? [...photo.children].map((el) => el.cloneNode(true)) : []));
+		copyInto(dialogPhoto, card.querySelector(".team-photo"));
 		dialogRole.textContent = card.querySelector(".team-copy .feature-eyebrow")?.textContent || "";
 		dialogName.textContent = card.querySelector(".team-copy h3")?.textContent || "";
-		dialogProfile.replaceChildren(...(profile ? [...profile.children].map((el) => el.cloneNode(true)) : []));
+		copyInto(dialogProfile, card.querySelector(".team-profile"));
 		lastButton = card.querySelector(".team-profile-button");
-		coachDialog.showModal();
+		dialog.showModal();
 	}
 
 	document.querySelectorAll(".team-card").forEach((card) => {
 		card.addEventListener("click", () => openCoach(card));
 	});
 
-	coachDialog.querySelector(".player-dialog-close").addEventListener("click", () => coachDialog.close());
-	coachDialog.addEventListener("click", (event) => {
-		if (event.target === coachDialog) coachDialog.close();
-	});
-	coachDialog.addEventListener("close", () => {
+	dialog.querySelector(".player-dialog-close").addEventListener("click", () => dialog.close());
+	closeOnBackdropClick(dialog);
+	// Return keyboard focus to the card's button after closing.
+	dialog.addEventListener("close", () => {
 		if (lastButton) lastButton.focus();
 	});
 }
+
+
+/* ---------- Start everything ---------- */
+initPlayerDialog();
+document.querySelectorAll(".feature-showcase").forEach(initFeatureShowcase);
+initScrolling();
+initFaqWidget();
+initContactForm();
+initMiniHeader();
+initCoachDialogs();

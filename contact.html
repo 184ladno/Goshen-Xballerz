@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | Goshen XBallerz</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script src="script.js" defer></script> <!-- all interactive features (pop-ups, FAQ, form…) -->
 </head>
 <body class="contact-body">
+    <!-- ===================== HEADER =====================
+         The same header is copied into every page (index, about, coaches,
+         contact). If you change a menu link or button, change it in ALL
+         pages. aria-current="page" marks the page you're on (gold underline). -->
     <header class="header">
         <button class="home-btn" type="button" aria-label="Go to home page" onclick="window.location.href='index.html'">
-        <img src="images/photo_2026-10-29_21.58.32-removebg-preview.png" alt="Goshen XBallerz logo" class="logo">
+        <img src="images/logo.webp" alt="Goshen XBallerz logo" class="logo">
         </button>
         <div class="header-brand">
             <h1 class="site-title">GOSHEN XBALLERZ</h1>
@@ -29,15 +33,16 @@
         <div class="header-actions">
             <a class="header-button" href="membership.html">
                 Membership
-                <span class="header-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                <span class="header-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
             </a>
             <a class="header-button header-button-primary" href="#contact-form">
                 Book Coaching
-                <span class="header-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                <span class="header-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
             </a>
         </div>
     </header>
 
+    <!-- ===================== PAGE CONTENT ===================== -->
     <main class="contact-page">
         <!-- Hero: same gold artwork as the other pages, headline left, player right -->
         <section class="contact-hero" aria-labelledby="contact-hero-title">
@@ -46,7 +51,7 @@
                     <h2 id="contact-hero-title">Football is won <span>in the mind</span></h2>
                     <p class="contact-hero-tagline">Developing players for a brighter game.</p>
                 </div>
-                <img class="contact-hero-player" src="images/WhatsApp Image 2026-10-30 at 16.03.52-Photoroom.png" alt="">
+                <img class="contact-hero-player" src="images/hero-player.webp" alt="">
             </div>
         </section>
 
@@ -135,17 +140,19 @@
                             </li>
                         </ul>
                     </div>
-                    <img class="booking-player" src="images/kai1.png" alt="" loading="lazy" decoding="async">
+                    <img class="booking-player" src="images/player-kai.webp" alt="" loading="lazy" decoding="async">
                 </aside>
             </div>
         </section>
     </main>
 
+    <!-- ===================== FOOTER =====================
+         Same footer on every page – change it in ALL pages. -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-top">
                 <a class="footer-brand" href="index.html" aria-label="Goshen XBallerz home">
-                    <img src="images/photo_2026-10-29_21.58.32-removebg-preview.png" alt="" class="footer-logo">
+                    <img src="images/logo.webp" alt="" class="footer-logo">
                     <span>
                         <span class="footer-name">GOSHEN XBALLERZ</span>
                         <span class="footer-tagline">Developing players for a brighter game.</span>

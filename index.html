@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goshen XBallerz</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script src="script.js" defer></script> <!-- all interactive features (pop-ups, FAQ, form…) -->
 </head>
 <body class="dark-body">
+    <!-- ===================== HEADER =====================
+         The same header is copied into every page (index, about, coaches,
+         contact). If you change a menu link or button, change it in ALL
+         pages. aria-current="page" marks the page you're on (gold underline). -->
     <header class="header">
         <button class="home-btn" type="button" aria-label="Go to home page" onclick="window.location.href='index.html'">
-        <img src="images/photo_2026-10-29_21.58.32-removebg-preview.png" alt="Goshen XBallerz logo" class="logo">
+        <img src="images/logo.webp" alt="Goshen XBallerz logo" class="logo">
         </button>
         <div class="header-brand">
             <h1 class="site-title">GOSHEN XBALLERZ</h1>
@@ -29,14 +33,16 @@
         <div class="header-actions">
             <a class="header-button" href="membership.html">
                 Membership
-                <span class="header-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                <span class="header-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
             </a>
             <a class="header-button header-button-primary" href="contact.html">
                 Book Coaching
-                <span class="header-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                <span class="header-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
             </a>
         </div>
     </header>
+
+    <!-- ===================== PAGE CONTENT ===================== -->
     <main class="navbar">
         <div class="title">
             <h1>Football is won</h1>
@@ -45,12 +51,12 @@
             <p>Practical, positive and tailored to help players grow.</p>
         </div>
         <div class="description">
-            <p class="1"><img src="images/Screenshot_30-10-2026_1541_fontawesome.com-removebg-preview.png" alt="Individual Attention"> INDIVIDUAL ATTENTION</p>
-            <p class="2"><img src="images/Screenshot_30-10-2026_15446_fontawesome.com-removebg-preview.png" alt="Real Game Development"> REAL GAME DEVELOPMENT</p>
-            <p class="3"><img src="images/Screenshot_30-10-2026_15553_fontawesome.com-removebg-preview.png" alt="Skills, Mindset and Confidence"> SKILLS, MINDSET AND CONFIDENCE </p>
+            <p><img src="images/icon-individual-attention.webp" alt="Individual Attention"> INDIVIDUAL ATTENTION</p>
+            <p><img src="images/icon-game-development.webp" alt="Real Game Development"> REAL GAME DEVELOPMENT</p>
+            <p><img src="images/icon-mindset.webp" alt="Skills, Mindset and Confidence"> SKILLS, MINDSET AND CONFIDENCE </p>
         </div>
         <button class="hero-player" type="button" aria-label="Learn about the Goshen XBallerz player" aria-haspopup="dialog" aria-controls="player-dialog">
-            <img src="images/WhatsApp Image 2026-10-30 at 16.03.52-Photoroom.png" alt="">
+            <img src="images/hero-player.webp" alt="">
         </button>
     </main>
     <dialog class="player-dialog" id="player-dialog" aria-labelledby="player-dialog-title">
@@ -122,11 +128,11 @@
                 <div class="coach-actions">
                     <a class="header-button header-button-primary coach-button" href="#reviews">
                         Read reviews
-                        <span class="header-button-arrow coach-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                        <span class="header-button-arrow coach-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
                     </a>
                     <a class="header-button coach-button" href="coaches.html">
                         Our coaches
-                        <span class="header-button-arrow"><img src="images/pngtree-vector-forward-icon-png-image_925823-removebg-preview.png" alt=""></span>
+                        <span class="header-button-arrow"><img src="images/icon-arrow.webp" alt=""></span>
                     </a>
                 </div>
             </div>
@@ -149,7 +155,7 @@
                     <p class="feature-number">01 / PERSONAL DEVELOPMENT</p>
                     <h3>1-to-1 coaching</h3>
                     <div class="feature-summary">
-                        <img class="feature-image" src="images/Gemini_Generated_Image_nqy04gnqy04gnqy0.jpeg" alt="Close-up of a player with the ball at their feet during a training drill" loading="lazy" decoding="async">
+                        <img class="feature-image" src="images/feature-one-to-one.webp" alt="Close-up of a player with the ball at their feet during a training drill" loading="lazy" decoding="async">
                         <p>Personalised sessions to sharpen technique, build confidence and accelerate development.</p>
                     </div>
                 </article>
@@ -157,7 +163,7 @@
                     <p class="feature-number">02 / SMALL GROUP TRAINING</p>
                     <h3>Small groups</h3>
                     <div class="feature-summary">
-                        <img class="feature-image" src="images/Gemini_Generated_Image_ujuqz6ujuqz6ujuq.jpeg" alt="Players working through a cone drill together in a small group" loading="lazy" decoding="async">
+                        <img class="feature-image" src="images/feature-small-groups.webp" alt="Players working through a cone drill together in a small group" loading="lazy" decoding="async">
                         <p>Focused, high-quality sessions in a small group environment with players of similar ability.</p>
                     </div>
                 </article>
@@ -165,7 +171,7 @@
                     <p class="feature-number">03 / PLAYER MINDSET</p>
                     <h3>Mindset &amp; decision making</h3>
                     <div class="feature-summary">
-                        <img class="feature-image" src="images/Gemini_Generated_Image_zhnrm2zhnrm2zhnr.jpeg" alt="A focused player looking out over the training ground" loading="lazy" decoding="async">
+                        <img class="feature-image" src="images/feature-mindset.webp" alt="A focused player looking out over the training ground" loading="lazy" decoding="async">
                         <p>Develop the thinking behind better decisions, composure and consistent performance.</p>
                     </div>
                 </article>
@@ -212,11 +218,13 @@
         </div>
     </section>
     </div>
+    <!-- ===================== FOOTER =====================
+         Same footer on every page – change it in ALL pages. -->
     <footer class="site-footer">
         <div class="footer-inner">
             <div class="footer-top">
                 <a class="footer-brand" href="index.html" aria-label="Goshen XBallerz home">
-                    <img src="images/photo_2026-10-29_21.58.32-removebg-preview.png" alt="" class="footer-logo">
+                    <img src="images/logo.webp" alt="" class="footer-logo">
                     <span>
                         <span class="footer-name">GOSHEN XBALLERZ</span>
                         <span class="footer-tagline">Developing players for a brighter game.</span>
