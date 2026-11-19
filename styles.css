@@ -54,7 +54,7 @@ body{
 .header{
     position: relative;
     z-index: 4;
-    background-color: rgb(36, 36, 34);
+    background-color: rgb(0, 0, 0);
     border: 1px solid var(--gold);
     border-radius: 6px;
     box-sizing: border-box;
@@ -701,9 +701,45 @@ body{
     }
 }
 
-/* Header on tablets: menu moves onto its own line.
-   Home hero on tablets: the three icons stack in a column so the player
-   doesn't cover them. */
+/* Header menu position (desktop and tablet; phones use the ☰ menu below).
+   Wide screens: the menu is pinned to the exact centre of the header, so it
+   never slides sideways when the window is resized.
+   Narrower screens: there isn't room for it between the logo and buttons,
+   so it gets its own centred row underneath. */
+@media (min-width: 1380px){
+    .header nav{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        flex: none;
+    }
+    .header ul{
+        flex-wrap: nowrap;
+    }
+    .header-actions{
+        margin-left: auto;
+    }
+}
+@media (min-width: 701px) and (max-width: 1379px){
+    .header{
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+    .header nav{
+        order: 1;
+        flex-basis: 100%;
+        padding: 4px 0 6px;
+        border-top: 1px solid rgba(218, 165, 32, 0.25);
+    }
+    .header nav ul{
+        justify-content: center;
+    }
+    .header-actions{
+        margin-left: auto;
+    }
+}
+
 /* Small laptops: keep the hero text clear of the player's arm */
 @media (max-width: 1200px){
     .title{
@@ -715,6 +751,8 @@ body{
     }
 }
 
+/* Home hero on tablets: the three icons stack in a column so the player
+   doesn't cover them */
 @media (max-width: 1000px){
     .description{
         max-width: 46%;
@@ -723,24 +761,6 @@ body{
     }
     .description p{
         padding: 6px 0;
-    }
-
-    .header{
-        flex-wrap: wrap;
-        row-gap: 4px;
-    }
-
-    .header nav{
-        order: 1;
-        flex-basis: 100%;
-    }
-
-    .header nav ul{
-        justify-content: flex-start;
-    }
-
-    .header-actions{
-        margin-left: auto;
     }
 }
 
@@ -1056,7 +1076,9 @@ body{
     margin: 12px;
     border: 1px solid rgba(218, 165, 32, 0.55);
     border-radius: 10px;
-    background-color: var(--bg-page);
+    /* Background behind the gold lines. Lower numbers = darker
+       (the rest of the page uses #1e1c1c). */
+    background-color: #131211;
     overflow: clip;
 }
 .page-lines{
